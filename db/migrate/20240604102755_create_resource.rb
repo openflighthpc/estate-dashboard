@@ -6,6 +6,7 @@ class CreateResource < ActiveRecord::Migration[7.1]
       t.string :resource_class
       t.integer :slot_capacity
       t.float :cost
+      t.string :location
       t.boolean :burst
 
       t.timestamps
