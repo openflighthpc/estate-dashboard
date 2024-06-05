@@ -1,6 +1,6 @@
-class CreateOrganisation < ActiveRecord::Migration[7.1]
+class CreateOrganisations < ActiveRecord::Migration[7.1]
   def change
-    create_table :organisation do |t|
+    create_table :organisations do |t|
       t.string :name
       t.string :channel_name
       t.string :channel_id
