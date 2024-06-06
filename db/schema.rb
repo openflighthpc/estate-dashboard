@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_04_102755) do
   end
 
   create_table "resources", force: :cascade do |t|
-    t.integer "organisations_id", null: false
+    t.integer "organisation_id", null: false
     t.string "platform"
     t.string "resource_class"
     t.integer "slot_capacity"
@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_04_102755) do
     t.boolean "burst"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["organisations_id"], name: "index_resources_on_organisations_id"
+    t.index ["organisation_id"], name: "index_resources_on_organisation_id"
   end
 
 end
