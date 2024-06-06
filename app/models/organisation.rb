@@ -4,6 +4,12 @@ class Organisation < ApplicationRecord
   validates :name, uniqueness: true
 
   def pretty_display
-    "'#{self.name}':\n\tSlack Channel Name: #{self.channel_name}\n\tSlack Channel ID: #{self.channel_id}"
+    msg = "'#{self.name}:'"
+    self.attributes.each do |field, value|
+      if !['id', 'created_at', 'updated_at'].include?(field)
+        msg << "\n\t#{field.humanize(keep_id_suffix: true)}: #{value}"
+      end
+    end
+    msg
   end
 end
