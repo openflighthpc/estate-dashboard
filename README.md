@@ -7,6 +7,8 @@ This app enables users to see an overview of their resources and send requests t
 - Ensure Ruby (3.2.2) and Bundler are installed on your device
 - Ensure SQLite is installed on your device (`sqlite3 --version`)
 - Run `bundle install`
+- Update the application's database credentials using `EDITOR=vim rails credentials:edit` (replacing `vim` with the editor of your choice) and setting:
+  - `slack_token` - Set this to the token for the Slack bot you are using. This token will start with `xoxb-`. The bot must have permission to send messages to the desired channel, and must be invited to the channel first. Alces Flight admins should use Estate DashBot's token for this field, which is available on request.
 - Run `bin/rails db:migrate`
 
 ## Operation
