@@ -1,0 +1,16 @@
+<h1><%= "Page for #{@org.name}"%></h1>
+
+<h2>Modify an existing resource:</h2>
+<form action="/send-message" method="post">
+  <input type="hidden" name="org_id" value=<%= "#{@org.id}" %> />
+  Resource ID: <input type="text" name="resource_id"> <br>
+  <% Resource.columns_hash.values.each do |field| %>
+  <%   if !['id', 'organisation_id', 'created_at', 'updated_at'].include?(field.name) %>
+         <% display_name = field.name.humanize(keep_id_suffix: true).ljust(100, ' ') %>
+         <%= "#{display_name}:" %> <input type="text" name="<%= field.name %>">
+         <br>
+  <%   end %>
+  <% end %>
+
+  <input type="submit" value="Submit">
+</form>
