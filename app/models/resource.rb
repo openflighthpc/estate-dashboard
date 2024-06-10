@@ -1,5 +1,6 @@
 class Resource < ApplicationRecord
   belongs_to :organisation
+  has_many :change_requests, dependent: :destroy
 
   def pretty_display
     msg = "Resource ##{self.id}:\n\tOwner: #{Organisation.find(self.organisation_id).name}"

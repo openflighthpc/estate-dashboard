@@ -32,3 +32,6 @@ Admins with access to the hosting server may make use of the following Rake task
 * `rails resources:list[<org_name>]` - List all existing resources for the given organisation.
 * `rails resources:edit[<org_name>, <resource_id>]` - Edit the details of a given resource.
 * `rails resources:delete[<org_name>, <resource_id>]` - Delete a given resource.
+
+#### Requests
+* `rails requests:list` - List past change requests from users
