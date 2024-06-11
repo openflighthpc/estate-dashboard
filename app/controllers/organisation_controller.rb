@@ -7,7 +7,7 @@ class OrganisationController < ApplicationController
   def send_message
     org = Organisation.find(params["org_id"])
     res = org.resources.find_by(id: params["resource_id"])
-    change_request = ChangeRequest.create(resource_id: res.id)
+    change_request = ChangeRequest.new(resource_id: res.id)
 
     msg = ""
     params.each do |key, value|
@@ -16,9 +16,7 @@ class OrganisationController < ApplicationController
         msg << "\n\t*#{key.humanize(keep_id_suffix: true)}:* #{res[key]} -> *#{value}*"
       end
     end
-    if msg.blank?
-      puts "No changes requested"
-    else
+    if !msg.blank?
       msg = "-" * 30 + "\nChange request received from *#{org.name}* for *resource ##{res.id}*:" + msg
       org.send_message(msg)
       change_request.save

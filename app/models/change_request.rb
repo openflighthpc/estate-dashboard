@@ -4,7 +4,7 @@ class ChangeRequest < ApplicationRecord
   def pretty_display
     msg = ""
     self.attributes.each do |field, value|
-      if !['resource_id', 'org_id', 'created_at', 'updated_at'].include?(field) && value
+      if !['id', 'resource_id', 'org_id', 'created_at', 'updated_at'].include?(field) && value
         msg << "\n\tSet #{field.humanize(keep_id_suffix: true)} to #{value}"
       end
     end
