@@ -35,3 +35,6 @@ Admins with access to the hosting server may make use of the following Rake task
 
 #### Requests
 * `rails requests:list` - List past change requests from users
+
+#### Changes
+* `rails changes:list` - List past changes made to resources. These logs reflect changes made using the above Rake commands - any changes made internally by the app or through use of `rails console` will not be stored here.

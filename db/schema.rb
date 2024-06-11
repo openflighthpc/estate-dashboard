@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_07_164431) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_11_101638) do
   create_table "change_requests", force: :cascade do |t|
     t.integer "resource_id", null: false
     t.string "platform"
@@ -21,6 +21,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_07_164431) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["resource_id"], name: "index_change_requests_on_resource_id"
+  end
+
+  create_table "changes", force: :cascade do |t|
+    t.integer "resource_id", null: false
+    t.string "platform"
+    t.string "resource_class"
+    t.integer "slot_capacity"
+    t.string "location"
+    t.boolean "burst"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_id"], name: "index_changes_on_resource_id"
   end
 
   create_table "organisations", force: :cascade do |t|
