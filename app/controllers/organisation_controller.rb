@@ -5,35 +5,29 @@ class OrganisationController < ApplicationController
   end
 
   def raw_data
-    @org = Organisation.find_by(name: params[:org_name])
-    response = {}.tap do |res|
-      res[:organisation] = org.name
-      res[:resources] = []
-      org.resources.each do |res|
-        res[:resources] << { 'id': res.id,
-                             'platform': res.platform,
-                             'location': res.location,
-                             'capacity': { 'dedicated': res.slot_capacity * 0.8,
-                                           'utilisedBurst': res.slot_capacity * 0.1,
-                                           'maxBurst': org.burst ? res.slot_capacity * 0.2 : 0,
-                                           'utilisedTotal': res.slot_capacity * 0.6,
-                                           'maxTotal': res.slot_capacity
-                                         },
-                             'cost': { 'dedicated': res.cost * 0.8,
-                                       'utilisedBurst': res.cost * 0.1,
-                                       'maxBurst': org.burst ? res.cost * 0.2 : 0,
-                                       'utilisedTotal': res.cost * 0.6,
-                                       'maxTotal': res.cost
-                                     }
-                           }
-      end
-      res[:total_capacity] =  { 'dedicated': res[:resources].map { |res| res['capacity']['dedicated'] }.sum,
-                                'utilisedBurst': res[:resources].map { |res| res['capacity']['utilisedBurst'] }.sum,
-                                'maxBurst': res[:resources].map { |res| res['capacity']['maxBurst'] }.sum,
-                                'utilisedTotal': res[:resources].map { |res| res['capacity']['utilisedTotal'] }.sum,
-                                'maxTotal': res[:resources].map { |res| res['capacity']['maxTotal'] }.sum
-                              }
+    org = Organisation.find_by(name: params[:org_name])
+    response = {}
+    response[:organisation] = org.name
+    resources = []
+    org.resources.each do |res|
+      resources << { 'id': res.id,
+                     'platform': res.platform,
+                     'location': res.location,
+                     'capacity': { 'dedicated': res.slot_capacity * 0.8,
+                                   'utilisedBurst': res.slot_capacity * 0.1,
+                                   'maxBurst': res.burst ? res.slot_capacity * 0.2 : 0,
+                                   'utilisedTotal': res.slot_capacity * 0.6,
+                                   'maxTotal': res.slot_capacity
+                                 },
+                     'cost': { 'dedicated': res.cost * 0.8,
+                               'utilisedBurst': res.cost * 0.1,
+                               'maxBurst': res.burst ? res.cost * 0.2 : 0,
+                               'utilisedTotal': res.cost * 0.6,
+                               'maxTotal': res.cost
+                             }
+                   }
     end
+    response[:resources] = resources
   
     render json: response
   end
