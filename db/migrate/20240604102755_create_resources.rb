@@ -1,4 +1,4 @@
-class CreateResource < ActiveRecord::Migration[7.1]
+class CreateResources < ActiveRecord::Migration[7.1]
   def change
     create_table :resources do |t|
       t.references :organisation, null: false

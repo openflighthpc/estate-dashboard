@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_06_04_102755) do
-  create_table "organisation", force: :cascade do |t|
+  create_table "organisations", force: :cascade do |t|
     t.string "name"
     t.string "channel_name"
     t.string "channel_id"
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_04_102755) do
     t.string "resource_class"
     t.integer "slot_capacity"
     t.float "cost"
+    t.string "location"
     t.boolean "burst"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
