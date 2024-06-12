@@ -12,4 +12,8 @@ class Organisation < ApplicationRecord
     end
     msg
   end
+
+  def send_message(msg)
+    Slack.send_message(self.channel_id, msg)
+  end
 end

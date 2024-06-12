@@ -7,6 +7,8 @@ This app enables users to see an overview of their resources and send requests t
 - Ensure Ruby (3.2.2) and Bundler are installed on your device
 - Ensure SQLite is installed on your device (`sqlite3 --version`)
 - Run `bundle install`
+- Update the application's database credentials using `EDITOR=vim rails credentials:edit` (replacing `vim` with the editor of your choice) and setting:
+  - `slack_token` - Set this to the token for the Slack bot you are using. This token will start with `xoxb-`. The bot must have permission to send messages to the desired channel, and must be invited to the channel first. Alces Flight admins should use Estate DashBot's token for this field, which is available on request.
 - Run `bin/rails db:migrate`
 
 ## Operation
@@ -30,3 +32,9 @@ Admins with access to the hosting server may make use of the following Rake task
 * `rails resources:list[<org_name>]` - List all existing resources for the given organisation.
 * `rails resources:edit[<org_name>, <resource_id>]` - Edit the details of a given resource.
 * `rails resources:delete[<org_name>, <resource_id>]` - Delete a given resource.
+
+#### Requests
+* `rails requests:list` - List past change requests from users
+
+#### Changes
+* `rails changes:list` - List past changes made to resources. These logs reflect changes made using the above Rake commands - any changes made internally by the app or through use of `rails console` will not be stored here.

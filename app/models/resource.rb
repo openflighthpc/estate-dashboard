@@ -1,5 +1,10 @@
 class Resource < ApplicationRecord
   belongs_to :organisation
+  has_many :change_requests, dependent: :destroy
+
+  validates :platform, :resource_class, :location, presence: true
+  validates :slot_capacity, numericality: { only_integer: true }
+  validates :cost, numericality: true
 
   def pretty_display
     msg = "Resource ##{self.id}:\n\tOwner: #{Organisation.find(self.organisation_id).name}"
