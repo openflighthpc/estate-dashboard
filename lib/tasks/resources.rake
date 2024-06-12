@@ -25,8 +25,8 @@ namespace :resources do
     File.delete('tmp/res_create.yaml')
 
     answers = answers.map { |k, v| [k.dehumanize.to_sym, v] }.to_h
-    resource = Resource.create(**(answers.merge({ :organisation_id => org.id })))
-    Change.create(**(answers.merge({ :resource_id => resource.id })))
+    resource = Resource.create!(**(answers.merge({ :organisation_id => org.id })))
+    Change.create!(**(answers.merge({ :resource_id => resource.id })))
     puts "Resource created"
   end
 
@@ -81,8 +81,8 @@ namespace :resources do
 
     answers = answers.map { |k, v| [k.dehumanize.to_sym, v] }.to_h
     changes = (answers.merge({ :resource_id => resource.id }).to_a - resource.attributes.map{ |k, v| [k.to_sym, v] }).to_h
-    Change.create(**changes)
-    resource.update(**answers)
+    Change.create!(**changes)
+    resource.update!(**answers)
     puts "Resource modified"
   end
 
