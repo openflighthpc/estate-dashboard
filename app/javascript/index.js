@@ -1,7 +1,7 @@
 class FlightBurstBar {
-  constructor (wrapperId, fixedValue, burstCapacity, burstValue, color) {
+  constructor(wrapperId, fixedValue, burstCapacity, burstValue, color) {
     this.domWrapper = document.getElementById(wrapperId);
-    
+
     this.domCanvas = this.newCanvas();
     this.domGlowCanvas = this.newCanvas();
     this.domGlowCanvas.style.filter = 'blur(6px)';
@@ -46,11 +46,11 @@ class FlightBurstBar {
     domCanvas.style.position = 'absolute';
     domCanvas.style.top = '0';
     domCanvas.style.left = '0';
-    
+
     return domCanvas;
   }
 
-  drawRoundedRect (left, top, width, height, borderRadius) {
+  drawRoundedRect(left, top, width, height, borderRadius) {
     const rightX = left + width;
     const bottomY = top + height;
     this.canvasCtxs.forEach((ctx) => {
@@ -90,9 +90,9 @@ class FlightBurstBar {
 }
 
 class FlightBurstPie {
-  constructor (wrapperId, data) {
+  constructor(wrapperId, data) {
     this.domWrapper = document.getElementById(wrapperId);
-    
+
     this.domCanvas = this.newCanvas();
     this.domGlowCanvas = this.newCanvas();
     this.domGlowCanvas.style.filter = 'blur(6px)';
@@ -130,7 +130,7 @@ class FlightBurstPie {
     domCanvas.style.left = '0';
     domCanvas.style.width = `${viewportDimensions.width}px`;
     domCanvas.style.height = `${viewportDimensions.height}px`;
-    
+
     return domCanvas;
   }
 
@@ -143,7 +143,7 @@ class FlightBurstPie {
     const nearStartY = centerY - eccentricNearR * Math.cos(eccentricNearStartRadian);
     const nearEndX = centerX + eccentricNearR * Math.sin(eccentricNearEndRadian);
     const nearEndY = centerY - eccentricNearR * Math.cos(eccentricNearEndRadian);
-    
+
     const eccentricFarR = farR - innerBorderWidth;
     const eccentricFarRadian = Math.asin(innerBorderWidth / eccentricFarR);
     const eccentricFarStartRadian = startRadian + eccentricFarRadian;
@@ -155,7 +155,7 @@ class FlightBurstPie {
 
 
     this.canvasCtxs.forEach((ctx) => {
-      
+
       ctx.fillStyle = color;
       ctx.beginPath();
       ctx.moveTo(nearStartX, nearStartY);
@@ -168,12 +168,12 @@ class FlightBurstPie {
     });
   }
 
-  drawBorderReducedRoundedArcRect(centerX, centerY, nearR, farR, startRadian, pieRadian, innerBorderWidth, borderRadius) {    
+  drawBorderReducedRoundedArcRect(centerX, centerY, nearR, farR, startRadian, pieRadian, innerBorderWidth, borderRadius) {
 
     let nearRoundedCornerCenterR = nearR + innerBorderWidth + borderRadius;
     let nearRoundedCornerCenterEccentricRadian = Math.asin((innerBorderWidth + borderRadius) / nearRoundedCornerCenterR);
     if (pieRadian - 2 * nearRoundedCornerCenterEccentricRadian < 0) {
-    
+
       nearRoundedCornerCenterEccentricRadian = pieRadian / 2;
 
       let nearBorderReducedCornerR = innerBorderWidth + nearR;
@@ -199,9 +199,9 @@ class FlightBurstPie {
     const nearStartX = centerX + (nearR + innerBorderWidth) * Math.sin(nearStartRoundedCornerCenterRadian);
     const nearStartY = centerY - (nearR + innerBorderWidth) * Math.cos(nearStartRoundedCornerCenterRadian);
     if (borderRadius === 0) {
-      console.log(nearStartRoundedCornerCenterX, nearStartX ,nearStartRoundedCornerCenterY, nearStartY);
-    } 
-    
+      console.log(nearStartRoundedCornerCenterX, nearStartX, nearStartRoundedCornerCenterY, nearStartY);
+    }
+
     const farRoundedCornerCenterR = farR - innerBorderWidth - borderRadius;
     const farRoundedCornerCenterEccentricRadian = Math.asin((innerBorderWidth + borderRadius) / farRoundedCornerCenterR);
     const farStartRoundedCornerCenterRadian = startRadian + farRoundedCornerCenterEccentricRadian;
@@ -240,7 +240,7 @@ class FlightBurstPie {
     });
   }
 
-  draw () {
+  draw() {
     const chartDimension = this.domCanvas.height;
     const totalCapacity = this.data.reduce((accumulator, platformData) => {
       return accumulator + platformData.fixedValue + platformData.burstCapacity;
@@ -284,7 +284,7 @@ const expandList = function () {
           'height 360ms ease-in,' +
           'border-radius 360ms ease-in'
       });
-      
+
       $('#earth-scene-wrapper').css({
         'top': 'calc(100% - 315px)',
         'left': 'calc(100% - 315px)',
@@ -323,9 +323,98 @@ const collapseList = function () {
 }
 
 window.onload = async function () {
+  const data = {
+    'organization': {
+      'name': 'org name'
+    },
+    'date': {
+      'startDate': timestamp,
+      'endDate': timestamp
+    },
+    'capacity': {
+      'dedicated': 120,
+      'utilizedBurst': 15,
+      'maxBurst': 40,
+      'utilizedTotal': 160,
+      'maxTotal': 160
+    },
+    'cost': {
+      'dedicated': 12,
+      'utilizedBurst': 2.61,
+      'maxBurst': 8,
+      'utilizedTotal': 14.61,
+      'maxTotal': 20
+    },
+    'resources': [
+      {
+        'id': '1',
+        'platform': 'Alces Cloud',
+        'location': 'GBR',
+        'capacity': {
+          'dedicated': 65,
+          'utilizedBurst': 10,
+          'maxBurst': 12,
+          'utilizedTotal': 75,
+          'maxTotal': 77
+        },
+        'cost': {
+          'dedicated': 5,
+          'utilizedBurst': 1.5,
+          'maxBurst': 1.8,
+          'utilizedTotal': 6.5,
+          'maxTotal': 6.8
+        }
+      },
+      {
+        'id': '2',
+        'platform': 'AWS',
+        'location': 'GBR',
+        'capacity': {
+          'dedicated': 20,
+          'utilizedBurst': 0,
+          'maxBurst': 0,
+          'utilizedTotal': 20,
+          'maxTotal': 20
+        },
+        'cost': {
+          'dedicated': 3,
+          'utilizedBurst': 0,
+          'maxBurst': 0,
+          'utilizedTotal': 3,
+          'maxTotal': 3
+        }
+      },
+      {
+        'id': '3',
+        'platform': 'On Premise',
+        'location': 'GBR',
+        'capacity': {
+          'dedicated': 35,
+          'utilizedBurst': 5,
+          'maxBurst': 28,
+          'utilizedTotal': 40,
+          'maxTotal': 63
+        },
+        'cost': {
+          'dedicated': 4,
+          'utilizedBurst': 1.11,
+          'maxBurst': 6.2,
+          'utilizedTotal': 5.11,
+          'maxTotal': 10.2
+        }
+      },
+    ],
+  }
 
-  new FlightBurstBar('capacity-bar', 120, 40, 15, '#B3D4FF');
-  new FlightBurstBar('cost-bar', 12, 8, 2.61, '#B3D4FF');
+  $('#capacity-data-wrapper').append(
+			`<p class="monthly-overview-data">Dedicated: ${data.capacity.dedicated}</p>` +
+			`<p class="monthly-overview-data">Burst (utilized): ${data.capacity.maxBurst}</p>` +
+			`<p class="monthly-overview-data">Burst (max): ${data.capacity.maxBurst}</p>` +
+			`<p class="monthly-overview-data">Total (utilized): ${data.capacity.utilizedTotal}</p>` +
+			`<p class="monthly-overview-data">Total (max): ${data.capacity.maxTotal}</p>`
+  );
+  new FlightBurstBar('capacity-bar', data.capacity.dedicated, data.capacity.maxBurst, data.capacity.utilizedBurst, '#B3D4FF');
+  new FlightBurstBar('cost-bar', data.cost.dedicated, data.cost.maxBurst, data.cost.utilizedBurst, '#B3D4FF');
   new FlightBurstPie(
     'platform-capacity-pie-chart',
     [
@@ -401,7 +490,7 @@ window.onload = async function () {
     $('#resource-wrapper').on('mouseenter', () => {
       expandList();
     })
-    
+
     $('#resource-wrapper').on('mouseleave', () => {
       collapseList();
     })
@@ -415,7 +504,7 @@ window.onload = async function () {
           'boxShadow': ''
         });
         $(e.currentTarget).css({
-         'boxShadow':
+          'boxShadow':
             '6px 6px 12px 0 #00000080,' +
             '0 0 120px 0 #B3D4FF40 inset'
         });
@@ -466,5 +555,5 @@ window.onload = async function () {
       expandList();
     });
   })
-  
+
 }
