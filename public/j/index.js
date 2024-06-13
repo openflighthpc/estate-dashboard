@@ -500,6 +500,12 @@ window.onload = async function () {
 
     $('#resource-return').on('click', () => {
       $('#resource-wrapper .board-title').text('Global Resources');
+      $('#resource-wrapper .board-content').empty();
+      Object.entries(data.resources).forEach(([platformName, value], index) => {
+          $('#resource-wrapper .board-content').append(
+              `<p>${value.capacity.maxTotal} of '${value.resource_class}' on ${value.platform} in ${value.location}</p>`
+          );
+      });
       requestAnimationFrame(() => {
         $('.platform-legend-entry').css({
           'boxShadow': ''

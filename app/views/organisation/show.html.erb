@@ -34,7 +34,11 @@
 			<div id="resource-wrapper">
 				<div id="resource-return"></div>
 				<h2 class="board-title">Global Resources</h2>
-                <div class="board-content">Test</div>
+                <div class="board-content">
+                  <% @org.resources.each do |resource| %>
+                    <p><%= resource.slot_capacity %> of '<%= resource.resource_class %>' on <%= resource.platform %> in <%= resource.location %></p>
+                  <%end%>
+                </div>
 			</div>
 		</div>
     <div id="earth-wrapper">
