@@ -24,6 +24,7 @@ class OrganisationController < ApplicationController
       resources << { 'id': res.id,
                      'platform': res.platform,
                      'location': res.location,
+                     'resource_class': res.resource_class,
                      'capacity': { 'dedicated': res.slot_capacity * 0.8,
                                    'utilisedBurst': res.slot_capacity * 0.1,
                                    'maxBurst': res.burst ? res.slot_capacity * 0.2 : 0,
