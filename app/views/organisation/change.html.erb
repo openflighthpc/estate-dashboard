@@ -1,0 +1,36 @@
+<h1><%= "Page for #{@org.name}"%></h1>
+
+<h2>Modify an existing resource:</h2>
+<table>
+  <form action="/send-message" method="post">
+    <input type="hidden" name="org_id" value=<%= "#{@org.id}" %> />
+    <tr>
+      <td> Resource ID: </td>
+      <td>
+        <select name="resource_id">
+          <% @org.resources.each do |res| %>
+            <option value= <%= res.id %>> <%= "##{res.id}" %> </option>
+          <% end %>
+        </select>
+      </td>
+    </tr>
+    <% Resource.columns_hash.values.each do |field| %>
+      <tr>
+        <% if !['id', 'organisation_id', 'created_at', 'updated_at', 'cost', 'burst'].include?(field.name) %>
+          <% display_name = field.name.humanize(keep_id_suffix: true) %>
+          <td> <%= "#{display_name}:" %> </td>
+          <td><input type="text" name="<%= field.name %>"></td>
+        <% end %>
+      </tr>
+    <% end %>
+    <td> Usage: </td>
+    <td>
+      <select name="burst">
+        <option value= false> Dedicated </option>
+        <option value= true> Burst </option>
+      </select> <br>
+    </td>
+
+    <tr><td colspan="2"><input type="submit" value="Submit request" style="height:35px; width:300px"></td></tr>
+  </form>
+</table>
