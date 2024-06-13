@@ -1,36 +1,48 @@
-<h1><%= "Page for #{@org.name}"%></h1>
+<!doctype html>
+<html>
 
-<h2>Modify an existing resource:</h2>
-<table>
-  <form action="/send-message" method="post">
-    <input type="hidden" name="org_id" value=<%= "#{@org.id}" %> />
-    <tr>
-      <td> Resource ID: </td>
-      <td>
-        <select name="resource_id">
-          <% @org.resources.each do |res| %>
-            <option value= <%= res.id %>> <%= "##{res.id}" %> </option>
-          <% end %>
-        </select>
-      </td>
-    </tr>
-    <% Resource.columns_hash.values.each do |field| %>
-      <tr>
-        <% if !['id', 'organisation_id', 'created_at', 'updated_at', 'cost', 'burst'].include?(field.name) %>
-          <% display_name = field.name.humanize(keep_id_suffix: true) %>
-          <td> <%= "#{display_name}:" %> </td>
-          <td><input type="text" name="<%= field.name %>"></td>
-        <% end %>
-      </tr>
-    <% end %>
-    <td> Usage: </td>
-    <td>
-      <select name="burst">
-        <option value= false> Dedicated </option>
-        <option value= true> Burst </option>
-      </select> <br>
-    </td>
+<head>
+	<title>Concertim | Powered by Alces Flight</title>
+	<meta charset="utf-8">
+    <script>var organisation = "<%= @org.name %>"</script>
+	<link rel="stylesheet" type="text/css" href="../c/index.css" />
+	<script type="text/javascript" src="../j/jquery.3.5.1.min.js"></script>
+	<script type="text/javascript" src="../j/echarts.min.js"></script>
+</head>
 
-    <tr><td colspan="2"><input type="submit" value="Submit request" style="height:35px; width:300px"></td></tr>
-  </form>
-</table>
+<body>
+		<div id="nav-bar"></div>
+		<h1 id="main-title"></h1>
+		<div id="overview-wrapper">
+			<div id="monthly-overview">
+				<h2 class="board-title">Monthly Overview</h2>
+				<p id="audit-date">06.01.2024 - 10.06.2024</p>
+				<div id="capacity-data-wrapper" class="monthly-overview-data-wrapper"></div>
+				<div id="capacity-bar" class="monthly-overview-bar"></div>
+				<div id="cost-data-wrapper" class="monthly-overview-data-wrapper"></div>
+				<div id="cost-bar" class="monthly-overview-bar"></div>
+			</div>
+			<div id="platform-capacity-pie-chart" class="platform-breakdown-chart">Capacity</div>
+			<div id="platform-cost-pie-chart" class="platform-breakdown-chart">Cost</div>
+			<div id="platform-legend-wrapper">
+				<p id="platform-legend-sort">Sort by: Name A-Z</p>
+				<div id="platform-legend-list-wrapper">
+					<div id="platform-legend-scroll-wrapper"></div>
+				</div>
+			</div>
+			<div id="resource-dimension-box"></div>
+			<div id="resource-wrapper">
+				<div id="resource-return"></div>
+				<h2 class="board-title">Global Resources</h2>
+			</div>
+		</div>
+    <div id="earth-wrapper">
+			<div id="earth-scene-wrapper"></div>
+				<div id="uk" class="earth-anchor" flight-location="GBR">3</div>
+    </div>
+
+	<script type="module" src="../j/earth/earth.js"></script>
+	<script type="text/javascript" src="../j/index.js"></script>
+</body>
+
+</html>

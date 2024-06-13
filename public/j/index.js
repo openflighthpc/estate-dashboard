@@ -323,7 +323,7 @@ const collapseList = function () {
 }
 
 window.onload = async function () {
-  const res = await fetch('/org/org name/raw-data');
+  const res = await fetch(`/org/${organisation}/raw-data`);
   const data = await res.json();
   $('#main-title').text(`${data.organization.name}'s Estate`);
   $('#capacity-data-wrapper').append(
