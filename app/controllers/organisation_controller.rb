@@ -4,6 +4,34 @@ class OrganisationController < ApplicationController
     @org = Organisation.find_by(name: params[:org_name])
   end
 
+  def raw_data
+    org = Organisation.find_by(name: params[:org_name])
+    response = {}
+    response[:organisation] = org.name
+    resources = []
+    org.resources.each do |res|
+      resources << { 'id': res.id,
+                     'platform': res.platform,
+                     'location': res.location,
+                     'capacity': { 'dedicated': res.slot_capacity * 0.8,
+                                   'utilisedBurst': res.slot_capacity * 0.1,
+                                   'maxBurst': res.burst ? res.slot_capacity * 0.2 : 0,
+                                   'utilisedTotal': res.slot_capacity * 0.6,
+                                   'maxTotal': res.slot_capacity
+                                 },
+                     'cost': { 'dedicated': res.cost * 0.8,
+                               'utilisedBurst': res.cost * 0.1,
+                               'maxBurst': res.burst ? res.cost * 0.2 : 0,
+                               'utilisedTotal': res.cost * 0.6,
+                               'maxTotal': res.cost
+                             }
+                   }
+    end
+    response[:resources] = resources
+  
+    render json: response
+  end
+
   def send_message
     org = Organisation.find(params["org_id"])
     res = org.resources.find_by(id: params["resource_id"])
