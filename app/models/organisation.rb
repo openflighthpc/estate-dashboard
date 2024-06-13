@@ -1,7 +1,7 @@
 class Organisation < ApplicationRecord
   has_many :resources, dependent: :destroy
 
-  validates :name, uniqueness: true
+  validates :name, presence:true, uniqueness: true
 
   def pretty_display
     msg = "'#{self.name}:'"
