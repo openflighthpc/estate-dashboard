@@ -473,10 +473,9 @@ window.onload = async function () {
       $('#resource-wrapper .board-title').text(`Resources on ${$(e.currentTarget).attr('flight-platform')}`);
       $('#resource-wrapper .board-content').empty();
       var platformEntries = data.resources.filter(obj => { return obj.platform === $(e.currentTarget).attr('flight-platform') });
-      console.log(platformEntries);
       Object.entries(platformEntries).forEach(([platformName, value], index) => {
           $('#resource-wrapper .board-content').append(
-              `<p>${value.capacity.maxTotal} of '${value.resource_class}' in ${value.location} (${platformName})</p>`
+              `<p>${value.capacity.maxTotal} of '${value.resource_class}' in ${value.location}</p>`
           );
       });
       $('#resource-wrapper').off('mouseenter');
@@ -522,6 +521,13 @@ window.onload = async function () {
 
     $('.earth-anchor').on('click', (e) => {
       $('#resource-wrapper .board-title').text(`Resources in ${$(e.target).attr('flight-location')}`);
+      $('#resource-wrapper .board-content').empty();
+      var locationEntries = data.resources.filter(obj => { return obj.location === $(e.currentTarget).attr('flight-location') });
+      Object.entries(locationEntries).forEach(([platformName, value], index) => {
+          $('#resource-wrapper .board-content').append(
+              `<p>${value.capacity.maxTotal} of '${value.resource_class}' on ${value.platform}</p>`
+          );
+      });
       $('#resource-wrapper').off('mouseenter');
       $('#resource-wrapper').off('mouseleave');
       requestAnimationFrame(() => {
