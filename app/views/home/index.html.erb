@@ -1,2 +1,5 @@
-<h1>Welcome to Estate Dashboard!</h1>
+
+<% @organisations.each do |org| %>
+  <p><a href="/org/<%= org.name %>"><%= org.name %></a></p>
+<% end %>
 

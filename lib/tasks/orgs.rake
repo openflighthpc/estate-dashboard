@@ -14,7 +14,7 @@ namespace :orgs do
     answers = YAML.load_file('tmp/org_create.yaml')
     File.delete('tmp/org_create.yaml')
     answers = answers.map { |k, v| [k.dehumanize.to_sym, v] }.to_h
-    Organisation.create(**answers)
+    Organisation.create!(**answers)
     puts "Organisation created"
   end
 
@@ -47,7 +47,7 @@ namespace :orgs do
     answers = YAML.load_file('tmp/org_edit.yaml')
     File.delete('tmp/org_edit.yaml')
     answers = answers.map { |k, v| [k.dehumanize.to_sym, v] }.to_h
-    org.update(**answers)
+    org.update!(**answers)
     puts "Details updated"
   end
 
