@@ -28,16 +28,16 @@ class OrganisationController < ApplicationController
         'resource_class': res.resource_class,
         'capacity': { 
           'dedicated': res.burst ? 0 : res.slot_capacity,
-          'utilisedBurst': res.burst ? (res.slot_capacity * 0.1).round : 0,
+          'utilizedBurst': res.burst ? (res.slot_capacity * 0.1).round : 0,
           'maxBurst': res.burst ? res.slot_capacity : 0,
-          'utilisedTotal': res.burst ? 0 : (res.slot_capacity * 0.6).round,
+          'utilizedTotal': res.burst ? 0 : (res.slot_capacity * 0.6).round,
           'maxTotal': res.slot_capacity
         },
         'cost': { 
           'dedicated': res.burst ? 0 : res.cost,
-          'utilisedBurst': res.burst ? (res.cost * 0.1).round(2) : 0 ,
+          'utilizedBurst': res.burst ? (res.cost * 0.1).round(2) : 0 ,
           'maxBurst': res.burst ? res.cost : 0,
-          'utilisedTotal': res.burst ? 0 : (res.cost * 0.6).round(2),
+          'utilizedTotal': res.burst ? 0 : (res.cost * 0.6).round(2),
           'maxTotal': res.cost
         }
       }
@@ -46,18 +46,18 @@ class OrganisationController < ApplicationController
 
     capacity = {
       'dedicated' => resources.sum{ |h| h[:capacity][:dedicated] },
-      'utilizedBurst' => resources.sum{ |h| h[:capacity][:utilisedBurst] },
+      'utilizedBurst' => resources.sum{ |h| h[:capacity][:utilizedBurst] },
       'maxBurst' => resources.sum{ |h| h[:capacity][:maxBurst] },
-      'utilizedTotal' => resources.sum{ |h| h[:capacity][:utilisedTotal] },
+      'utilizedTotal' => resources.sum{ |h| h[:capacity][:utilizedTotal] },
       'maxTotal' => resources.sum{ |h| h[:capacity][:maxTotal] }
     }
     response[:capacity] = capacity
 
     cost = {
       'dedicated' => resources.sum{ |h| h[:cost][:dedicated] },
-      'utilizedBurst' => resources.sum{ |h| h[:cost][:utilisedBurst] },
+      'utilizedBurst' => resources.sum{ |h| h[:cost][:utilizedBurst] },
       'maxBurst' => resources.sum{ |h| h[:cost][:maxBurst] },
-      'utilizedTotal' => resources.sum{ |h| h[:cost][:utilisedTotal] },
+      'utilizedTotal' => resources.sum{ |h| h[:cost][:utilizedTotal] },
       'maxTotal' => resources.sum{ |h| h[:cost][:maxTotal] }
     }
 
