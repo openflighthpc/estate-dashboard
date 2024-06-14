@@ -475,7 +475,7 @@ window.onload = async function () {
       var platformEntries = data.resources.filter(obj => { return obj.platform === $(e.currentTarget).attr('flight-platform') });
       Object.entries(platformEntries).forEach(([platformName, value], index) => {
           $('#resource-wrapper .board-content').append(
-              `<p>${value.capacity.maxTotal} of '${value.resource_class}' in ${value.location}</p>`
+              `<p>${value.capacity.maxTotal} slots of '${value.resource_class}' in ${value.location}</p>`
           );
       });
       $('#resource-wrapper').off('mouseenter');
@@ -503,7 +503,7 @@ window.onload = async function () {
       $('#resource-wrapper .board-content').empty();
       Object.entries(data.resources).forEach(([platformName, value], index) => {
           $('#resource-wrapper .board-content').append(
-              `<p>${value.capacity.maxTotal} of '${value.resource_class}' on ${value.platform} in ${value.location}</p>`
+              `<p>${value.capacity.maxTotal} slots of '${value.resource_class}' on ${value.platform} in ${value.location}</p>`
           );
       });
       requestAnimationFrame(() => {
@@ -531,7 +531,7 @@ window.onload = async function () {
       var locationEntries = data.resources.filter(obj => { return obj.location === $(e.currentTarget).attr('flight-location') });
       Object.entries(locationEntries).forEach(([platformName, value], index) => {
           $('#resource-wrapper .board-content').append(
-              `<p>${value.capacity.maxTotal} of '${value.resource_class}' on ${value.platform}</p>`
+              `<p>${value.capacity.maxTotal} slots of '${value.resource_class}' on ${value.platform}</p>`
           );
       });
       $('#resource-wrapper').off('mouseenter');

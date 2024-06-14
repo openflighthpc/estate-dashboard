@@ -36,7 +36,7 @@
 				<h2 class="board-title">Global Resources</h2>
                 <div class="board-content">
                   <% @org.resources.each do |resource| %>
-                    <p><%= resource.slot_capacity %> of '<%= resource.resource_class %>' on <%= resource.platform %> in <%= resource.location %></p>
+                    <p><%= resource.slot_capacity %> slots of '<%= resource.resource_class %>' on <%= resource.platform %> in <%= resource.location %></p>
                   <%end%>
                 </div>
 			</div>
