@@ -21,23 +21,26 @@ class OrganisationController < ApplicationController
     }
     resources = []
     org.resources.each do |res|
-      resources << { 'id': res.id,
-                     'platform': res.platform,
-                     'location': res.location,
-                     'resource_class': res.resource_class,
-                     'capacity': { 'dedicated': (res.slot_capacity * 0.8).round,
-                                   'utilisedBurst': (res.slot_capacity * 0.1).round,
-                                   'maxBurst': res.burst ? (res.slot_capacity * 0.2).round : 0,
-                                   'utilisedTotal': (res.slot_capacity * 0.6).round,
-                                   'maxTotal': res.slot_capacity
-                                 },
-                     'cost': { 'dedicated': res.cost * 0.8,
-                               'utilisedBurst': res.cost * 0.1,
-                               'maxBurst': res.burst ? res.cost * 0.2 : 0,
-                               'utilisedTotal': res.cost * 0.6,
-                               'maxTotal': res.cost
-                             }
-                   }
+      resources << { 
+        'id': res.id,
+        'platform': res.platform,
+        'location': res.location,
+        'resource_class': res.resource_class,
+        'capacity': { 
+          'dedicated': res.burst ? 0 : res.slot_capacity,
+          'utilisedBurst': res.burst ? (res.slot_capacity * 0.1).round : 0,
+          'maxBurst': res.burst ? res.slot_capacity : 0,
+          'utilisedTotal': res.burst ? 0 : (res.slot_capacity * 0.6).round,
+          'maxTotal': res.slot_capacity
+        },
+        'cost': { 
+          'dedicated': res.burst ? 0 : res.cost,
+          'utilisedBurst': res.burst ? (res.cost * 0.1).round(2) : 0 ,
+          'maxBurst': res.burst ? res.cost : 0,
+          'utilisedTotal': res.burst ? 0 : (res.cost * 0.6).round(2),
+          'maxTotal': res.cost
+        }
+      }
     end
     response[:resources] = resources
 
