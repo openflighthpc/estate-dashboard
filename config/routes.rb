@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'hello_world', to: 'hello_world#index'
   root "home#index"
 
   get "org/:org_name",            to: "organisation#show"
