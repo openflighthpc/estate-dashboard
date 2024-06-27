@@ -17,4 +17,15 @@ class Organisation < ApplicationRecord
   def send_message(msg)
     Slack.send_message(self.channel_id, msg)
   end
+
+  def unassigned_resources
+    resources.map do |res|
+      if res.unassigned_slots > 0
+        {
+          resource: res,
+          unassigned_slots: res.unassigned_slots,
+        }
+      end
+    end.compact
+  end
 end

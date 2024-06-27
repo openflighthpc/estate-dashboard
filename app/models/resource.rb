@@ -1,6 +1,7 @@
 class Resource < ApplicationRecord
   belongs_to :organisation
   has_many :change_requests, dependent: :destroy
+  has_many :resource_assignments, dependent: :destroy
 
   validates :platform, :resource_class, :location, presence: true
   validates :slot_capacity, numericality: { only_integer: true }
@@ -14,5 +15,9 @@ class Resource < ApplicationRecord
       end
     end
     msg
+  end
+
+  def unassigned_slots
+    slot_capacity - resource_assignments.pluck(:no_slots).sum
   end
 end

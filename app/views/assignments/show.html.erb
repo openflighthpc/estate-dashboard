@@ -2,9 +2,8 @@
 
 <p>
   <% @resource_groups.each do |g| %>
-  <h3><%= g.name %></h3>
-  <p>Assigned resources:</p>
-  <p>Total: <%= g.resource_assignments.pluck(:no_slots).sum %> slots</p>
+  <h3>Assigned resources:</h3>
+  <p><%= g.name %> assigned: <%= g.resource_assignments.pluck(:no_slots).sum %> slots</p>
   <ul>
     <% g.resource_assignments.each do |a| %>
     <li><%= a.resource.platform %> <%= a.resource.resource_class %> - <%= a.no_slots %> slots</li>
@@ -13,4 +12,13 @@
 <% end %>
 
 </p>
-<%= link_to 'Edit', edit_assignment_path %>
+
+<p>
+  <h3>Unassigned</h3>
+<ul>
+  <% @unassigned_resources.each do |res| %>
+    <li><%= res[:resource].platform %> <%= res[:resource].resource_class %> - <%= res[:unassigned_slots] %> / <%= res[:resource].slot_capacity %> slots</li>
+  <% end %>
+</ul>
+</p>
+<%= link_to 'Edit', edit_assignment_path(organisation_id: @organisation.id) %>
