@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_27_124641) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_27_125945) do
   create_table "change_requests", force: :cascade do |t|
     t.integer "resource_id", null: false
     t.string "platform"
@@ -43,6 +43,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_124641) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "resource_assignments", force: :cascade do |t|
+    t.integer "no_slots"
+    t.integer "resource_id"
+    t.integer "resource_group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_group_id"], name: "index_resource_assignments_on_resource_group_id"
+    t.index ["resource_id"], name: "index_resource_assignments_on_resource_id"
+  end
+
   create_table "resource_groups", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -65,5 +75,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_124641) do
     t.index ["organisation_id"], name: "index_resources_on_organisation_id"
   end
 
+  add_foreign_key "resource_assignments", "resource_groups"
+  add_foreign_key "resource_assignments", "resources"
   add_foreign_key "resource_groups", "organisations"
 end

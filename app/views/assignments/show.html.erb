@@ -1,6 +1,16 @@
 <h1>Resource assignment</h1>
 
 <p>
-  <%= @resource_groups.inspect %>
+  <% @resource_groups.each do |g| %>
+  <h3><%= g.name %></h3>
+  <p>Assigned resources:</p>
+  <p>Total: <%= g.resource_assignments.pluck(:no_slots).sum %> slots</p>
+  <ul>
+    <% g.resource_assignments.each do |a| %>
+    <li><%= a.resource.platform %> <%= a.resource.resource_class %> - <%= a.no_slots %> slots</li>
+      <% end %>
+  </ul>
+<% end %>
+
 </p>
 <%= link_to 'Edit', edit_assignment_path %>
