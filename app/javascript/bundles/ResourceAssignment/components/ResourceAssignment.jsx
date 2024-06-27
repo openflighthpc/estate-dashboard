@@ -5,17 +5,34 @@ import * as style from './ResourceAssignment.module.css';
 const ResourceAssignment = (props) => {
   const [name, setName] = useState(props.name);
 
+  const groups = [
+    { name: 'Traditional HPC', assignedSlots: 4 },
+    { name: 'R&D', assignedSlots: 2 },
+    ];
+  const [assignedSlots, setAssignedSlots] = useState(6);
+  const totalSlots = 10;
+
   return (
-    <div>
-      <h3>Hello, {name}!</h3>
-      <hr />
-      <form>
-        <label className={style.bright} htmlFor="name">
-          Say hello to:
-          <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-        </label>
-      </form>
-    </div>
+    <>
+      <div className={style.pageGrid}>
+        <div className={style.column}>
+          <h1>Unassigned</h1>
+          <p>
+            No. slots: {totalSlots - assignedSlots}
+          </p>
+        </div>
+        <div className={style.column}>
+          <h1>Assigned</h1>
+          <div className='d-flex'>
+            <p>
+              No.slots: {assignedSlots}
+            </p>
+            <button onClick={() => setAssignedSlots(assignedSlots + 1)}>+</button>
+            <button onClick={() => setAssignedSlots(assignedSlots - 1)}>-</button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
