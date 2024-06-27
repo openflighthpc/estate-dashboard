@@ -2,6 +2,23 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import * as style from './ResourceAssignment.module.css';
 
+function AssignedResource({ noSlots, total, onInputChange, onSlotIncrease, onSlotDecrease }) {
+  return (
+    <div className='d-flex'>
+      No.slots:
+      <input id="name" type="text" value={noSlots} onChange={onInputChange} />
+      <button
+        disabled = {noSlots >= total}
+        onClick={onSlotIncrease}
+      >+</button>
+      <button
+        disabled = {noSlots <= 0}
+        onClick={onSlotDecrease}
+      >-</button>
+    </div>
+  );
+}
+
 const ResourceAssignment = (props) => {
   const [name, setName] = useState(props.name);
 
@@ -38,18 +55,13 @@ const ResourceAssignment = (props) => {
         </div>
         <div className={style.column}>
           <h1>Assigned</h1>
-          <div className='d-flex'>
-            No.slots:
-            <input id="name" type="text" value={assignedSlots} onChange={ChangeAssignedSlots} />
-            <button
-              disabled = {assignedSlots >= totalSlots}
-              onClick={() => setAssignedSlots(assignedSlots + 1)}
-            >+</button>
-            <button
-              disabled = {assignedSlots <= 0}
-              onClick={() => setAssignedSlots(assignedSlots - 1)}
-            >-</button>
-          </div>
+          <AssignedResource
+            noSlots={assignedSlots}
+            total={totalSlots}
+            onInputChange={ChangeAssignedSlots}
+            onSlotIncrease={() => setAssignedSlots(assignedSlots + 1)}
+            onSlotDecrease={() => setAssignedSlots(assignedSlots - 1)}
+          />
         </div>
       </div>
     </>
