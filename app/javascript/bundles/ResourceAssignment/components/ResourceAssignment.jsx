@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import * as style from './HelloWorld.module.css';
+import * as style from './ResourceAssignment.module.css';
 
-const HelloWorld = (props) => {
+const ResourceAssignment = (props) => {
   const [name, setName] = useState(props.name);
 
   return (
@@ -19,8 +19,8 @@ const HelloWorld = (props) => {
   );
 };
 
-HelloWorld.propTypes = {
+ResourceAssignment.propTypes = {
   name: PropTypes.string.isRequired, // this is passed from the Rails view
 };
 
-export default HelloWorld;
+export default ResourceAssignment;
