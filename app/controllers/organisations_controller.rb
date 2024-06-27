@@ -1,11 +1,11 @@
-class OrganisationController < ApplicationController
+class OrganisationsController < ApplicationController
 
   def show
-    @org = Organisation.find_by(name: params[:org_name])
+    @org = Organisation.find(params[:id])
   end
 
-  def change
-    @org = Organisation.find_by(name: params[:org_name])
+  def edit
+    @org = Organisation.find(params[:id])
   end
 
   def raw_data
