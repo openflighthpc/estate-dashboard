@@ -1,5 +1,6 @@
 class Organisation < ApplicationRecord
   has_many :resources, dependent: :destroy
+  has_many :resource_groups, dependent: :destroy
 
   validates :name, presence:true, uniqueness: true
 
