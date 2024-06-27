@@ -12,8 +12,23 @@ const ResourceAssignment = (props) => {
   const [assignedSlots, setAssignedSlots] = useState(6);
   const totalSlots = 10;
 
+  function ChangeAssignedSlots(e) {
+    if (e.target.value >= 0 && e.target.value <= totalSlots) {
+      setAssignedSlots(Number(e.target.value));
+    }
+  }
+
   return (
     <>
+      <h3>Hello, {name}!</h3>
+      <hr />
+      <form>
+        <label className={style.bright} htmlFor="name">
+          Say hello to:
+          <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+        </label>
+      </form>
+
       <div className={style.pageGrid}>
         <div className={style.column}>
           <h1>Unassigned</h1>
@@ -24,11 +39,16 @@ const ResourceAssignment = (props) => {
         <div className={style.column}>
           <h1>Assigned</h1>
           <div className='d-flex'>
-            <p>
-              No.slots: {assignedSlots}
-            </p>
-            <button onClick={() => setAssignedSlots(assignedSlots + 1)}>+</button>
-            <button onClick={() => setAssignedSlots(assignedSlots - 1)}>-</button>
+            No.slots:
+            <input id="name" type="text" value={assignedSlots} onChange={ChangeAssignedSlots} />
+            <button
+              disabled = {assignedSlots >= totalSlots}
+              onClick={() => setAssignedSlots(assignedSlots + 1)}
+            >+</button>
+            <button
+              disabled = {assignedSlots <= 0}
+              onClick={() => setAssignedSlots(assignedSlots - 1)}
+            >-</button>
           </div>
         </div>
       </div>
