@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import * as style from './ResourceAssignment.module.css';
 
-function AssignedResource({ resourceName, noSlots, total, onInputChange, onSlotIncrease, onSlotDecrease }) {
+function AssignedResource({ resourceName, noSlots, unassigned, onInputChange, onSlotIncrease, onSlotDecrease }) {
   return (
     <p>
       <strong>{resourceName}</strong>
       No.slots:
       <input id="name" type="text" value={noSlots} onChange={onInputChange} />
       <button
-        disabled = {noSlots >= total}
+        disabled = {unassigned <= 0}
         onClick={onSlotIncrease}
       >+</button>
       <button
@@ -121,7 +121,7 @@ const ResourceAssignment = (props) => {
                             <AssignedResource
                               resourceName={r.name}
                               noSlots={assignedSlots3[index].find((a) => a.groupId === g.id).assignedSlots}
-                              total={r.totalSlots}
+                              unassigned={unassignedSlots(index)}
                               onInputChange={(e) => ChangeAssignedSlots3(e, g.id, index)}
                               onSlotIncrease={() => handleIncrease3(g.id, index)}
                               onSlotDecrease={() => handleDecrease3(g.id, index)}
