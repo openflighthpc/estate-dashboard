@@ -53,26 +53,21 @@ const ResourceAssignment = (props) => {
       <div className={style.pageGrid}>
         <div className={style.column}>
           <h1>Unassigned</h1>
-          <p>No slots: {totalSlots[0] - assignedSlots[0]}</p>
-          <p>No slots: {totalSlots[1] - assignedSlots[1]}</p>
-
+          {totalSlots.map((total, index) => (
+            <p>No slots: {total - assignedSlots[index]}</p>
+          ))}
         </div>
         <div className={style.column}>
           <h1>Assigned</h1>
-          <AssignedResource
-            noSlots={assignedSlots[0]}
-            total={totalSlots[0]}
-            onInputChange={(e) => ChangeAssignedSlots(e, 0)}
-            onSlotIncrease={() => handleIncrease(0)}
-            onSlotDecrease={() => handleDecrease(0)}
-          />
-          <AssignedResource
-            noSlots={assignedSlots[1]}
-            total={totalSlots[1]}
-            onInputChange={(e) => ChangeAssignedSlots(e, 1)}
-            onSlotIncrease={() => handleIncrease(1)}
-            onSlotDecrease={() => handleDecrease(1)}
-          />
+          {assignedSlots.map((res, index) => (
+            <AssignedResource
+              noSlots={assignedSlots[index]}
+              total={totalSlots[index]}
+              onInputChange={(e) => ChangeAssignedSlots(e, index)}
+              onSlotIncrease={() => handleIncrease(index)}
+              onSlotDecrease={() => handleDecrease(index)}
+            />
+          ))}
         </div>
       </div>
     </>
