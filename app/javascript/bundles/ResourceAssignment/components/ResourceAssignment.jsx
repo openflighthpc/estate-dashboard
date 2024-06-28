@@ -32,6 +32,22 @@ const ResourceAssignment = (props) => {
     { name: 'instance-type', assignedSlots: 4 },
     { name: 'on-prem model', assignedSlots: 2 },
     ];
+  const resources2 = [
+    { name: 'instance-type',
+      assignments: [
+        { groupId: 1, assignedSlots: 4},
+        { groupId: 2, assignedSlots: 1},
+      ],
+      totalSlots: 10,
+    },
+    { name: 'on-prem model',
+      assignments: [
+        { groupId: 1, assignedSlots: 0},
+        { groupId: 2, assignedSlots: 3},
+      ],
+      totalSlots: 5,
+    },
+  ];
   const groupResources = resources.map((g) => g.assignedSlots);
 
   const [assignedSlots, setAssignedSlots] = useState(groupResources);
@@ -73,8 +89,8 @@ const ResourceAssignment = (props) => {
                   <div className={style.groupCard}>
                     <h3>{g.name}</h3>
                     {
-                      resources.map(r => {
-                        return(<div>{r.name}</div>)
+                      resources2.map(r => {
+                        return(<div>{r.name} {r.assignments.find((a) => a.groupId === g.id).assignedSlots}</div>)
                       })
                     }
                   </div>
