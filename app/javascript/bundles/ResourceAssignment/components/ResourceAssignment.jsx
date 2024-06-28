@@ -55,6 +55,12 @@ const ResourceAssignment = (props) => {
   const [assignedSlots3, setAssignedSlots3] = useState(groupResources3);
   const totalSlots = [10, 5];
 
+  function unassignedSlots(index) {
+    let assigned = {...assignedSlots3}[index];
+    const totalSlots = resources2[index].totalSlots;
+    return totalSlots - assigned.map((a) => a.assignedSlots).reduce((partialSum, a) => partialSum + a, 0);
+  }
+
   function ChangeAssignedSlots(e, i) {
     if (e.target.value >= 0 && e.target.value <= totalSlots[i]) {
       let newAssigned = assignedSlots.slice();
@@ -96,8 +102,8 @@ const ResourceAssignment = (props) => {
       <div className={style.pageGrid}>
         <div className={style.column}>
           <h1>Unassigned</h1>
-          {totalSlots.map((total, index) => (
-            <p><strong>{resources[index].name}</strong> No slots: {total - assignedSlots[index]}</p>
+          {resources2.map((res, index) => (
+            <p><strong>{res.name}</strong> No slots: {unassignedSlots(index)}</p>
           ))}
         </div>
         <div className={style.column}>
@@ -112,7 +118,6 @@ const ResourceAssignment = (props) => {
                       resources2.map((r, index) => {
                         return(
                           <>
-                            <div>{r.name} {assignedSlots3[index].find((a) => a.groupId === g.id).assignedSlots}</div>
                             <AssignedResource
                               resourceName={r.name}
                               noSlots={assignedSlots3[index].find((a) => a.groupId === g.id).assignedSlots}
@@ -131,16 +136,6 @@ const ResourceAssignment = (props) => {
               })
             }
           </div>
-          {assignedSlots.map((res, index) => (
-            <AssignedResource
-              resourceName={resources[index].name}
-              noSlots={assignedSlots[index]}
-              total={totalSlots[index]}
-              onInputChange={(e) => ChangeAssignedSlots(e, index)}
-              onSlotIncrease={() => handleIncrease(index)}
-              onSlotDecrease={() => handleDecrease(index)}
-            />
-          ))}
         </div>
       </div>
     </>
