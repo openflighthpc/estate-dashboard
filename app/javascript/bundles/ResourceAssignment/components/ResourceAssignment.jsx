@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import * as style from './ResourceAssignment.module.css';
 
-function AssignedResource({ noSlots, total, onInputChange, onSlotIncrease, onSlotDecrease }) {
+function AssignedResource({ resourceName, noSlots, total, onInputChange, onSlotIncrease, onSlotDecrease }) {
   return (
     <p>
+      <strong>{resourceName}</strong>
       No.slots:
       <input id="name" type="text" value={noSlots} onChange={onInputChange} />
       <button
@@ -22,11 +23,11 @@ function AssignedResource({ noSlots, total, onInputChange, onSlotIncrease, onSlo
 const ResourceAssignment = (props) => {
   const [name, setName] = useState(props.name);
 
-  const groups = [
-    { name: 'Traditional HPC', assignedSlots: 4 },
-    { name: 'R&D', assignedSlots: 2 },
+  const resources = [
+    { name: 'instance-type', assignedSlots: 4 },
+    { name: 'on-prem model', assignedSlots: 2 },
     ];
-  const groupResources = groups.map((g) => g.assignedSlots);
+  const groupResources = resources.map((g) => g.assignedSlots);
   const [assignedSlots, setAssignedSlots] = useState(groupResources);
   const totalSlots = [10, 5];
 
@@ -54,13 +55,14 @@ const ResourceAssignment = (props) => {
         <div className={style.column}>
           <h1>Unassigned</h1>
           {totalSlots.map((total, index) => (
-            <p>No slots: {total - assignedSlots[index]}</p>
+            <p><strong>{resources[index].name}</strong> No slots: {total - assignedSlots[index]}</p>
           ))}
         </div>
         <div className={style.column}>
           <h1>Assigned</h1>
           {assignedSlots.map((res, index) => (
             <AssignedResource
+              resourceName={resources[index].name}
               noSlots={assignedSlots[index]}
               total={totalSlots[index]}
               onInputChange={(e) => ChangeAssignedSlots(e, index)}
