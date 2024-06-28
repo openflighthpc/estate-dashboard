@@ -4,7 +4,7 @@ import * as style from './ResourceAssignment.module.css';
 
 function AssignedResource({ noSlots, total, onInputChange, onSlotIncrease, onSlotDecrease }) {
   return (
-    <div className='d-flex'>
+    <p>
       No.slots:
       <input id="name" type="text" value={noSlots} onChange={onInputChange} />
       <button
@@ -15,7 +15,7 @@ function AssignedResource({ noSlots, total, onInputChange, onSlotIncrease, onSlo
         disabled = {noSlots <= 0}
         onClick={onSlotDecrease}
       >-</button>
-    </div>
+    </p>
   );
 }
 
@@ -26,13 +26,26 @@ const ResourceAssignment = (props) => {
     { name: 'Traditional HPC', assignedSlots: 4 },
     { name: 'R&D', assignedSlots: 2 },
     ];
-  const [assignedSlots, setAssignedSlots] = useState(6);
-  const totalSlots = 10;
+  const groupResources = groups.map((g) => g.assignedSlots);
+  const [assignedSlots, setAssignedSlots] = useState(groupResources);
+  const totalSlots = [10, 5];
 
-  function ChangeAssignedSlots(e) {
-    if (e.target.value >= 0 && e.target.value <= totalSlots) {
-      setAssignedSlots(Number(e.target.value));
+  function ChangeAssignedSlots(e, i) {
+    if (e.target.value >= 0 && e.target.value <= totalSlots[i]) {
+      let newAssigned = assignedSlots.slice();
+      newAssigned[i] = Number(e.target.value);
+      setAssignedSlots(newAssigned);
     }
+  }
+  function handleIncrease(i) {
+    let newAssigned = assignedSlots.slice();
+    newAssigned[i] += 1;
+    setAssignedSlots(newAssigned);
+  }
+  function handleDecrease(i) {
+    let newAssigned = assignedSlots.slice();
+    newAssigned[i] -= 1;
+    setAssignedSlots(newAssigned);
   }
 
   return (
@@ -49,18 +62,25 @@ const ResourceAssignment = (props) => {
       <div className={style.pageGrid}>
         <div className={style.column}>
           <h1>Unassigned</h1>
-          <p>
-            No. slots: {totalSlots - assignedSlots}
-          </p>
+          <p>No slots: {totalSlots[0] - assignedSlots[0]}</p>
+          <p>No slots: {totalSlots[1] - assignedSlots[1]}</p>
+
         </div>
         <div className={style.column}>
           <h1>Assigned</h1>
           <AssignedResource
-            noSlots={assignedSlots}
-            total={totalSlots}
-            onInputChange={ChangeAssignedSlots}
-            onSlotIncrease={() => setAssignedSlots(assignedSlots + 1)}
-            onSlotDecrease={() => setAssignedSlots(assignedSlots - 1)}
+            noSlots={assignedSlots[0]}
+            total={totalSlots[0]}
+            onInputChange={(e) => ChangeAssignedSlots(e, 0)}
+            onSlotIncrease={() => handleIncrease(0)}
+            onSlotDecrease={() => handleDecrease(0)}
+          />
+          <AssignedResource
+            noSlots={assignedSlots[1]}
+            total={totalSlots[1]}
+            onInputChange={(e) => ChangeAssignedSlots(e, 1)}
+            onSlotIncrease={() => handleIncrease(1)}
+            onSlotDecrease={() => handleDecrease(1)}
           />
         </div>
       </div>
