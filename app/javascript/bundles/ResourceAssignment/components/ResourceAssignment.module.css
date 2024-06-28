@@ -13,3 +13,7 @@
     flex-direction: column;
     align-items: center;
 }
+
+.groupCard {
+    margin-bottom: 32px;
+}

@@ -23,11 +23,17 @@ function AssignedResource({ resourceName, noSlots, total, onInputChange, onSlotI
 const ResourceAssignment = (props) => {
   const [name, setName] = useState(props.name);
 
+  const groups = [
+    { id: 1, name: 'Traditional HPC'},
+    { id: 2, name: 'R&D'},
+  ];
+
   const resources = [
     { name: 'instance-type', assignedSlots: 4 },
     { name: 'on-prem model', assignedSlots: 2 },
     ];
   const groupResources = resources.map((g) => g.assignedSlots);
+
   const [assignedSlots, setAssignedSlots] = useState(groupResources);
   const totalSlots = [10, 5];
 
@@ -60,6 +66,22 @@ const ResourceAssignment = (props) => {
         </div>
         <div className={style.column}>
           <h1>Assigned</h1>
+          <div>
+            {
+              groups.map(g => {
+                return (
+                  <div className={style.groupCard}>
+                    <h3>{g.name}</h3>
+                    {
+                      resources.map(r => {
+                        return(<div>{r.name}</div>)
+                      })
+                    }
+                  </div>
+                )
+              })
+            }
+          </div>
           {assignedSlots.map((res, index) => (
             <AssignedResource
               resourceName={resources[index].name}
