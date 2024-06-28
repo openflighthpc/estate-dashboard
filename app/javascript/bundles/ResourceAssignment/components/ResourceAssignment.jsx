@@ -49,8 +49,10 @@ const ResourceAssignment = (props) => {
     },
   ];
   const groupResources = resources.map((g) => g.assignedSlots);
+  const groupResources3 = resources2.map((res) => res.assignments);
 
   const [assignedSlots, setAssignedSlots] = useState(groupResources);
+  const [assignedSlots3, setAssignedSlots3] = useState(groupResources3);
   const totalSlots = [10, 5];
 
   function ChangeAssignedSlots(e, i) {
@@ -71,6 +73,24 @@ const ResourceAssignment = (props) => {
     setAssignedSlots(newAssigned);
   }
 
+  function ChangeAssignedSlots3(e, groupId, resourceIndex) {
+    if (e.target.value >= 0 && e.target.value <= resources2[resourceIndex].totalSlots) {
+      let newAssigned = {...assignedSlots3};
+      newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots = Number(e.target.value);
+      setAssignedSlots3(newAssigned);
+    }
+  }
+  function handleIncrease3(groupId, resourceIndex) {
+    let newAssigned = {...assignedSlots3};
+    newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots += 1;
+    setAssignedSlots3(newAssigned);
+  }
+  function handleDecrease3(groupId, resourceIndex) {
+    let newAssigned = {...assignedSlots3};
+    newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots -= 1;
+    setAssignedSlots3(newAssigned);
+  }
+
   return (
     <>
       <div className={style.pageGrid}>
@@ -89,8 +109,21 @@ const ResourceAssignment = (props) => {
                   <div className={style.groupCard}>
                     <h3>{g.name}</h3>
                     {
-                      resources2.map(r => {
-                        return(<div>{r.name} {r.assignments.find((a) => a.groupId === g.id).assignedSlots}</div>)
+                      resources2.map((r, index) => {
+                        return(
+                          <>
+                            <div>{r.name} {assignedSlots3[index].find((a) => a.groupId === g.id).assignedSlots}</div>
+                            <AssignedResource
+                              resourceName={r.name}
+                              noSlots={assignedSlots3[index].find((a) => a.groupId === g.id).assignedSlots}
+                              total={r.totalSlots}
+                              onInputChange={(e) => ChangeAssignedSlots3(e, g.id, index)}
+                              onSlotIncrease={() => handleIncrease3(g.id, index)}
+                              onSlotDecrease={() => handleDecrease3(g.id, index)}
+                            />
+                          </>
+
+                        )
                       })
                     }
                   </div>
