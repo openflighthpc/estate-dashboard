@@ -22,6 +22,10 @@
     margin-bottom: 32px;
 }
 
+.changes {
+    min-width: 20rem;
+}
+
 .requestButton {
     margin-top: auto;
     margin-bottom: 1rem;

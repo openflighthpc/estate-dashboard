@@ -97,6 +97,28 @@ const ResourceAssignment = (props) => {
     return changedAssignments;
   }
 
+  async function sendChanges() {
+    try {
+      const data = {
+        testField: "testValue",
+      };
+      const response = await fetch("http://127.0.0.1:3000/assignment/send-message", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      })
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const json = await response.json();
+      console.log(json);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
   return (
     <>
       <div className={style.pageGrid}>
@@ -138,31 +160,32 @@ const ResourceAssignment = (props) => {
         </div>
         <div className={style.column}>
           <h1>Changes</h1>
+          <div className={style.changes}>
           {
             groups.map((g, index) => {
               if (changesForGroup(index).length > 0) {
                 return(
                   <>
                     <h3>{g.name}</h3>
-                    <ul>
-                      {changesForGroup(index).map((change) => {
-                        return(
-                          <li>
-                            {resources[change.resourceIndex].name}
-                            <br/>
-                            {change.initiallyAssigned} --> {change.nowAssigned}
-                          </li>
-                        )
-                      })}
-                    </ul>
+                    {changesForGroup(index).map((change) => {
+                      return(
+                        <p>
+                          {resources[change.resourceIndex].name}
+                          <br/>
+                          {change.initiallyAssigned} --> {change.nowAssigned}
+                        </p>
+                      )
+                    })}
                   </>
                 )
               }
             })
           }
+          </div>
           <button
             className={style.requestButton}
             disabled={!anyChanges()}
+            onClick={sendChanges}
           >
             Request changes
           </button>

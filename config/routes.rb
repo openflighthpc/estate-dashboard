@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resource :assignment, only: [:show, :edit]
   resolve('Assignment') { [:assignment] }
 
-  get "org/:org_name/raw-data",   to: "organisations#raw_data"
-  post "send-message/",           to: "organisations#send_message"
+  get "org/:org_name/raw-data",         to: "organisations#raw_data"
+  post "send-message/",                 to: "organisations#send_message"
+  post "assignment/send-message/",      to: "assignments#send_message"
 end
