@@ -118,7 +118,6 @@ const ResourceAssignment = (props) => {
                               onSlotDecrease={() => handleDecrease(g.id, index)}
                             />
                           </>
-
                         )
                       })
                     }
@@ -152,6 +151,7 @@ const ResourceAssignment = (props) => {
               }
             })
           }
+          <button className={style.requestButton}>Request changes</button>
         </div>
       </div>
     </>
