@@ -38,7 +38,7 @@ const ResourceAssignment = (props) => {
         { groupId: 1, assignedSlots: 4},
         { groupId: 2, assignedSlots: 1},
       ],
-      totalSlots: 10,
+      totalSlots: 15,
     },
     { name: 'on-prem model',
       assignments: [
@@ -80,10 +80,13 @@ const ResourceAssignment = (props) => {
   }
 
   function ChangeAssignedSlots3(e, groupId, resourceIndex) {
-    if (e.target.value >= 0 && e.target.value <= resources2[resourceIndex].totalSlots) {
-      let newAssigned = {...assignedSlots3};
-      newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots = Number(e.target.value);
-      setAssignedSlots3(newAssigned);
+    if (e.target.value >= 0) {
+      const maxSlots = unassignedSlots(resourceIndex) + assignedSlots3[resourceIndex].find((g) => g.groupId === groupId).assignedSlots;
+      if ( e.target.value <= maxSlots) {
+        let newAssigned = {...assignedSlots3};
+        newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots = Number(e.target.value);
+        setAssignedSlots3(newAssigned);
+      }
     }
   }
   function handleIncrease3(groupId, resourceIndex) {
