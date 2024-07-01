@@ -47,7 +47,7 @@ const ResourceAssignment = (props) => {
   const [assignedSlots, setAssignedSlots] = useState(initialAssignments);
 
   function unassignedSlots(index) {
-    let assigned = {...assignedSlots}[index];
+    let assigned = [...assignedSlots][index];
     const totalSlots = resources[index].totalSlots;
     return totalSlots - assigned.map((a) => a.assignedSlots).reduce((partialSum, a) => partialSum + a, 0);
   }
@@ -56,21 +56,30 @@ const ResourceAssignment = (props) => {
     if (e.target.value >= 0) {
       const maxSlots = unassignedSlots(resourceIndex) + assignedSlots[resourceIndex].find((g) => g.groupId === groupId).assignedSlots;
       if ( e.target.value <= maxSlots) {
-        let newAssigned = {...assignedSlots};
+        let newAssigned = [...assignedSlots];
         newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots = Number(e.target.value);
         setAssignedSlots(newAssigned);
       }
     }
   }
   function handleIncrease(groupId, resourceIndex) {
-    let newAssigned = {...assignedSlots};
+    let newAssigned = [...assignedSlots];
     newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots += 1;
     setAssignedSlots(newAssigned);
   }
   function handleDecrease(groupId, resourceIndex) {
-    let newAssigned = {...assignedSlots};
+    let newAssigned = [...assignedSlots];
     newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots -= 1;
     setAssignedSlots(newAssigned);
+  }
+
+  function anyChanges() {
+    for (let i = 0; i < groups.length; i++) {
+      if (changesForGroup(i).length > 0) {
+        return true;
+      }
+    }
+    return false;
   }
 
   function changesForGroup(groupIndex) {
@@ -151,7 +160,12 @@ const ResourceAssignment = (props) => {
               }
             })
           }
-          <button className={style.requestButton}>Request changes</button>
+          <button
+            className={style.requestButton}
+            disabled={!anyChanges()}
+          >
+            Request changes
+          </button>
         </div>
       </div>
     </>
