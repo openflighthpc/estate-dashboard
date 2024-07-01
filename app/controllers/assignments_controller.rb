@@ -11,8 +11,9 @@ class AssignmentsController < ApplicationController
 
   def send_message
     org = Organisation.first
-    msg = "\nTest message"
-    msg = "-" * 30 + "\nResource assignment request received from *#{org.name}*:" + msg
+    res = JSON.parse(request.raw_post)
+    msg = res["testField"]
+    msg = "-" * 30 + "\nResource assignment request received from *#{org.name}*: \n" + msg
     org.send_message(msg)
     response = { result: "Message sent successfully" }
     render json: response
