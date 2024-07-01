@@ -52,7 +52,7 @@ const ResourceAssignment = (props) => {
     return totalSlots - assigned.map((a) => a.assignedSlots).reduce((partialSum, a) => partialSum + a, 0);
   }
 
-  function ChangeAssignedSlots(e, groupId, resourceIndex) {
+  function handleInputChange(e, groupId, resourceIndex) {
     if (e.target.value >= 0) {
       const maxSlots = unassignedSlots(resourceIndex) + assignedSlots[resourceIndex].find((g) => g.groupId === groupId).assignedSlots;
       if ( e.target.value <= maxSlots) {
@@ -98,7 +98,7 @@ const ResourceAssignment = (props) => {
                               resourceName={r.name}
                               noSlots={assignedSlots[index].find((a) => a.groupId === g.id).assignedSlots}
                               unassigned={unassignedSlots(index)}
-                              onInputChange={(e) => ChangeAssignedSlots(e, g.id, index)}
+                              onInputChange={(e) => handleInputChange(e, g.id, index)}
                               onSlotIncrease={() => handleIncrease(g.id, index)}
                               onSlotDecrease={() => handleDecrease(g.id, index)}
                             />
