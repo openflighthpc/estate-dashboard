@@ -43,8 +43,8 @@ const ResourceAssignment = (props) => {
       totalSlots: 5,
     },
   ];
-  const groupResources = resources.map((res) => res.assignments);
-  const [assignedSlots, setAssignedSlots] = useState(groupResources);
+  const initialAssignments = resources.map((res) => res.assignments);
+  const [assignedSlots, setAssignedSlots] = useState(initialAssignments);
 
   function unassignedSlots(index) {
     let assigned = {...assignedSlots}[index];
@@ -71,6 +71,25 @@ const ResourceAssignment = (props) => {
     let newAssigned = {...assignedSlots};
     newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots -= 1;
     setAssignedSlots(newAssigned);
+  }
+
+  function changes() {
+    let changedAssignments = [];
+    for (let i = 0; i < groups.length; i++) {
+      const groupId = groups[i].id;
+      let changedForGroup = [];
+      for (let j = 0; j < resources.length; j++) {
+        const initiallyAssigned = initialAssignments[j].find((g) => g.groupId === groupId).assignedSlots;
+        const nowAssigned = assignedSlots[j].find((g) => g.groupId === groupId).assignedSlots;
+        if (initiallyAssigned !== nowAssigned) {
+          changedForGroup.push(
+            { resourceIndex: j, initiallyAssigned: initiallyAssigned, nowAssigned: nowAssigned }
+          )
+        }
+      }
+      changedAssignments.push(changedForGroup);
+    }
+    return changedAssignments;
   }
 
   return (
@@ -112,6 +131,31 @@ const ResourceAssignment = (props) => {
               })
             }
           </div>
+        </div>
+        <div className={style.column}>
+          <h1>Changes</h1>
+          {
+            groups.map((g, index) => {
+              if (changes()[index].length > 0) {
+                return(
+                  <>
+                    <h3>{g.name}</h3>
+                    <ul>
+                      {changes()[index].map((change) => {
+                        return(
+                          <li>
+                            {resources[change.resourceIndex].name}
+                            <br/>
+                            {change.initiallyAssigned} --> {change.nowAssigned}
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </>
+                )
+              }
+            })
+          }
         </div>
       </div>
     </>
