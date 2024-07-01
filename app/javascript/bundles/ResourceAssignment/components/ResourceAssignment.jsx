@@ -73,21 +73,17 @@ const ResourceAssignment = (props) => {
     setAssignedSlots(newAssigned);
   }
 
-  function changes() {
+  function changesForGroup(groupIndex) {
+    const groupId = groups[groupIndex].id;
     let changedAssignments = [];
-    for (let i = 0; i < groups.length; i++) {
-      const groupId = groups[i].id;
-      let changedForGroup = [];
-      for (let j = 0; j < resources.length; j++) {
-        const initiallyAssigned = initialAssignments[j].find((g) => g.groupId === groupId).assignedSlots;
-        const nowAssigned = assignedSlots[j].find((g) => g.groupId === groupId).assignedSlots;
-        if (initiallyAssigned !== nowAssigned) {
-          changedForGroup.push(
-            { resourceIndex: j, initiallyAssigned: initiallyAssigned, nowAssigned: nowAssigned }
-          )
-        }
+    for (let i = 0; i < resources.length; i++) {
+      const initiallyAssigned = initialAssignments[i].find((g) => g.groupId === groupId).assignedSlots;
+      const nowAssigned = assignedSlots[i].find((g) => g.groupId === groupId).assignedSlots;
+      if (initiallyAssigned !== nowAssigned) {
+        changedAssignments.push(
+          { resourceIndex: i, initiallyAssigned: initiallyAssigned, nowAssigned: nowAssigned }
+        )
       }
-      changedAssignments.push(changedForGroup);
     }
     return changedAssignments;
   }
@@ -136,12 +132,12 @@ const ResourceAssignment = (props) => {
           <h1>Changes</h1>
           {
             groups.map((g, index) => {
-              if (changes()[index].length > 0) {
+              if (changesForGroup(index).length > 0) {
                 return(
                   <>
                     <h3>{g.name}</h3>
                     <ul>
-                      {changes()[index].map((change) => {
+                      {changesForGroup(index).map((change) => {
                         return(
                           <li>
                             {resources[change.resourceIndex].name}
