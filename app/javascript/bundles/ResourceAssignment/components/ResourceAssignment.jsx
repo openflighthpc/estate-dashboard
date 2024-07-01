@@ -27,12 +27,7 @@ const ResourceAssignment = (props) => {
     { id: 1, name: 'Traditional HPC'},
     { id: 2, name: 'R&D'},
   ];
-
   const resources = [
-    { name: 'instance-type', assignedSlots: 4 },
-    { name: 'on-prem model', assignedSlots: 2 },
-    ];
-  const resources2 = [
     { name: 'instance-type',
       assignments: [
         { groupId: 1, assignedSlots: 4},
@@ -48,56 +43,34 @@ const ResourceAssignment = (props) => {
       totalSlots: 5,
     },
   ];
-  const groupResources = resources.map((g) => g.assignedSlots);
-  const groupResources3 = resources2.map((res) => res.assignments);
-
+  const groupResources = resources.map((res) => res.assignments);
   const [assignedSlots, setAssignedSlots] = useState(groupResources);
-  const [assignedSlots3, setAssignedSlots3] = useState(groupResources3);
-  const totalSlots = [10, 5];
 
   function unassignedSlots(index) {
-    let assigned = {...assignedSlots3}[index];
-    const totalSlots = resources2[index].totalSlots;
+    let assigned = {...assignedSlots}[index];
+    const totalSlots = resources[index].totalSlots;
     return totalSlots - assigned.map((a) => a.assignedSlots).reduce((partialSum, a) => partialSum + a, 0);
   }
 
-  function ChangeAssignedSlots(e, i) {
-    if (e.target.value >= 0 && e.target.value <= totalSlots[i]) {
-      let newAssigned = assignedSlots.slice();
-      newAssigned[i] = Number(e.target.value);
-      setAssignedSlots(newAssigned);
-    }
-  }
-  function handleIncrease(i) {
-    let newAssigned = assignedSlots.slice();
-    newAssigned[i] += 1;
-    setAssignedSlots(newAssigned);
-  }
-  function handleDecrease(i) {
-    let newAssigned = assignedSlots.slice();
-    newAssigned[i] -= 1;
-    setAssignedSlots(newAssigned);
-  }
-
-  function ChangeAssignedSlots3(e, groupId, resourceIndex) {
+  function ChangeAssignedSlots(e, groupId, resourceIndex) {
     if (e.target.value >= 0) {
-      const maxSlots = unassignedSlots(resourceIndex) + assignedSlots3[resourceIndex].find((g) => g.groupId === groupId).assignedSlots;
+      const maxSlots = unassignedSlots(resourceIndex) + assignedSlots[resourceIndex].find((g) => g.groupId === groupId).assignedSlots;
       if ( e.target.value <= maxSlots) {
-        let newAssigned = {...assignedSlots3};
+        let newAssigned = {...assignedSlots};
         newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots = Number(e.target.value);
-        setAssignedSlots3(newAssigned);
+        setAssignedSlots(newAssigned);
       }
     }
   }
-  function handleIncrease3(groupId, resourceIndex) {
-    let newAssigned = {...assignedSlots3};
+  function handleIncrease(groupId, resourceIndex) {
+    let newAssigned = {...assignedSlots};
     newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots += 1;
-    setAssignedSlots3(newAssigned);
+    setAssignedSlots(newAssigned);
   }
-  function handleDecrease3(groupId, resourceIndex) {
-    let newAssigned = {...assignedSlots3};
+  function handleDecrease(groupId, resourceIndex) {
+    let newAssigned = {...assignedSlots};
     newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots -= 1;
-    setAssignedSlots3(newAssigned);
+    setAssignedSlots(newAssigned);
   }
 
   return (
@@ -105,7 +78,7 @@ const ResourceAssignment = (props) => {
       <div className={style.pageGrid}>
         <div className={style.column}>
           <h1>Unassigned</h1>
-          {resources2.map((res, index) => (
+          {resources.map((res, index) => (
             <p><strong>{res.name}</strong> No slots: {unassignedSlots(index)}</p>
           ))}
         </div>
@@ -118,16 +91,16 @@ const ResourceAssignment = (props) => {
                   <div className={style.groupCard}>
                     <h3>{g.name}</h3>
                     {
-                      resources2.map((r, index) => {
+                      resources.map((r, index) => {
                         return(
                           <>
                             <AssignedResource
                               resourceName={r.name}
-                              noSlots={assignedSlots3[index].find((a) => a.groupId === g.id).assignedSlots}
+                              noSlots={assignedSlots[index].find((a) => a.groupId === g.id).assignedSlots}
                               unassigned={unassignedSlots(index)}
-                              onInputChange={(e) => ChangeAssignedSlots3(e, g.id, index)}
-                              onSlotIncrease={() => handleIncrease3(g.id, index)}
-                              onSlotDecrease={() => handleDecrease3(g.id, index)}
+                              onInputChange={(e) => ChangeAssignedSlots(e, g.id, index)}
+                              onSlotIncrease={() => handleIncrease(g.id, index)}
+                              onSlotDecrease={() => handleDecrease(g.id, index)}
                             />
                           </>
 
