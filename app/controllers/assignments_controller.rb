@@ -10,7 +10,12 @@ class AssignmentsController < ApplicationController
   end
 
   def raw_data
-    response = { 'test' => "value" }
+    org = Organisation.first
+    response = {
+      organisationId: org.id,
+      resourceGroups: org.resource_groups.select(:id, :name),
+      assignments: org.assigned_resources,
+    }
     render json: response
   end
 

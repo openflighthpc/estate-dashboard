@@ -28,4 +28,16 @@ class Organisation < ApplicationRecord
       end
     end.compact
   end
+
+  def assigned_resources
+    resources.map do |res|
+      {
+        id: res.id,
+        name: [res.platform, res.resource_class].join(' '),
+        assignments: res.resource_assignments
+                        .select(:resource_group_id, :no_slots)
+                        .sort_by { |ass| ass.resource_group_id }
+      }
+    end
+  end
 end
