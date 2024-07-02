@@ -11,10 +11,17 @@ class AssignmentsController < ApplicationController
 
   def send_message
     org = Organisation.first
-    res = JSON.parse(request.raw_post)
-    msg = res["testField"]
-    msg = "-" * 30 + "\nResource assignment request received from *#{org.name}*: \n" + msg
-    org.send_message(msg)
+    all_changes = JSON.parse(request.raw_post)
+    msg = ["-" * 30, "Resource assignment request received from *#{org.name}*:", "\n"]
+    all_changes.each do |res_group|
+      msg << "*#{ResourceGroup.find(res_group["groupId"]).name}*"
+      res_group["changes"].each do |change|
+        res = Resource.find(change["resourceId"])
+        msg << "Resource #{res.id} - #{res.platform} #{res.resource_class}:   #{change["initiallyAssigned"]} --> #{change["nowAssigned"]}"
+      end
+      msg << "\n"
+    end
+    org.send_message(msg.join("\n"))
     response = { result: "Message sent successfully" }
     render json: response
   end

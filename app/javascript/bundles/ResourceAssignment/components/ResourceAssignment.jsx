@@ -28,14 +28,16 @@ const ResourceAssignment = (props) => {
     { id: 2, name: 'R&D'},
   ];
   const resources = [
-    { name: 'instance-type',
+    { id: 1,
+      name: 'instance-type',
       assignments: [
         { groupId: 1, assignedSlots: 4},
         { groupId: 2, assignedSlots: 1},
       ],
       totalSlots: 15,
     },
-    { name: 'on-prem model',
+    { id: 2,
+      name: 'on-prem model',
       assignments: [
         { groupId: 1, assignedSlots: 0},
         { groupId: 2, assignedSlots: 3},
@@ -90,7 +92,12 @@ const ResourceAssignment = (props) => {
       const nowAssigned = assignedSlots[i].find((g) => g.groupId === groupId).assignedSlots;
       if (initiallyAssigned !== nowAssigned) {
         changedAssignments.push(
-          { resourceIndex: i, initiallyAssigned: initiallyAssigned, nowAssigned: nowAssigned }
+          {
+            resourceIndex: i,
+            resourceId: resources[i].id,
+            initiallyAssigned: initiallyAssigned,
+            nowAssigned: nowAssigned,
+          }
         )
       }
     }
@@ -99,9 +106,13 @@ const ResourceAssignment = (props) => {
 
   async function sendChanges() {
     try {
-      const data = {
-        testField: "testValue",
-      };
+      let data = [];
+      for (let i = 0; i < groups.length; i++) {
+        const changes = changesForGroup(i);
+        if (changes.length > 0) {
+          data.push({ groupId: groups[i].id, changes: changes });
+        }
+      }
       const response = await fetch("http://127.0.0.1:3000/assignment/send-message", {
         method: "POST",
         body: JSON.stringify(data),
