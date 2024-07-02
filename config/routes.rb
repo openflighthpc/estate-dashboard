@@ -7,5 +7,6 @@ Rails.application.routes.draw do
 
   get "org/:org_name/raw-data",         to: "organisations#raw_data"
   post "send-message/",                 to: "organisations#send_message"
+  get "assignment/raw-data/",           to: "assignments#raw_data"
   post "assignment/send-message/",      to: "assignments#send_message"
 end

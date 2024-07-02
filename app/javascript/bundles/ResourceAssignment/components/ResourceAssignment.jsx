@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import * as style from './ResourceAssignment.module.css';
 
 function AssignedResource({ resourceName, noSlots, unassigned, onInputChange, onSlotIncrease, onSlotDecrease }) {
@@ -21,7 +21,32 @@ function AssignedResource({ resourceName, noSlots, unassigned, onInputChange, on
 }
 
 const ResourceAssignment = (props) => {
-  const [name, setName] = useState(props.name);
+
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/assignment/raw-data'); // Replace with your API endpoint
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+      const data = await response.json();
+      setData(data);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  console.log(data);
+
 
   const groups = [
     { id: 1, name: 'Traditional HPC'},

@@ -9,6 +9,11 @@ class AssignmentsController < ApplicationController
     @props = { name: "Stranger" }
   end
 
+  def raw_data
+    response = { 'test' => "value" }
+    render json: response
+  end
+
   def send_message
     org = Organisation.first
     all_changes = JSON.parse(request.raw_post)
