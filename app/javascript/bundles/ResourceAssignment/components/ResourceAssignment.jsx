@@ -159,7 +159,7 @@ const ResourceAssignment = (props) => {
           data.changes.push({ groupId: groups[i].id, changes: changes });
         }
       }
-      const response = await fetch("http://127.0.0.1:3000/assignment/send-message", {
+      const response = await fetch("send-message", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
