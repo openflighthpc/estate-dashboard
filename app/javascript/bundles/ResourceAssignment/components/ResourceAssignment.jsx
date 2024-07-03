@@ -25,14 +25,14 @@ const ResourceAssignment = (props) => {
   const [groups, setGroups] = useState([]);
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loading2, setLoading2] = useState(true);
+  const [loadingInitial, setLoadingInitial] = useState(true);
   const [error, setError] = useState(null);
   const [assignedSlots, setAssignedSlots] = useState([]);
   const [initialAssignments, setInitialAssignment] = useState([]);
 
   useEffect(() => {
     fetchData();
-    fetchData2();
+    setInitialData();
   }, []);
 
   const fetchData = async () => {
@@ -51,18 +51,18 @@ const ResourceAssignment = (props) => {
       setLoading(false);
     }
   };
-  const fetchData2 = async () => {
+  const setInitialData = async () => {
     try {
       const response = await fetch('/assignment/raw-data'); // Replace with your API endpoint
       if (!response.ok) {
         throw new Error('Network response was not ok.');
       }
-      const data2 = await response.json();
-      setInitialAssignment(data2.assignments.map((res) => res.assignments));
-      setLoading2(false);
+      const data = await response.json();
+      setInitialAssignment(data.assignments.map((res) => res.assignments));
+      setLoadingInitial(false);
     } catch (error) {
       setError(error.message);
-      setLoading2(false);
+      setLoadingInitial(false);
     }
   };
 
@@ -103,28 +103,24 @@ const ResourceAssignment = (props) => {
   }
 
   function changesForGroup(groupIndex) {
-    if (loading || loading2) {
-      return [];
-    } else {
-      const groupId = groups[groupIndex].id;
-      let changedAssignments = [];
-      for (let i = 0; i < resources.length; i++) {
+    const groupId = groups[groupIndex].id;
+    let changedAssignments = [];
+    for (let i = 0; i < resources.length; i++) {
 
-        const initiallyAssigned = initialAssignments[i].find((g) => g.groupId === groupId).assignedSlots;
-        const nowAssigned = assignedSlots[i].find((g) => g.groupId === groupId).assignedSlots;
-        if (initiallyAssigned !== nowAssigned) {
-          changedAssignments.push(
-            {
-              resourceIndex: i,
-              resourceId: resources[i].id,
-              initiallyAssigned: initiallyAssigned,
-              nowAssigned: nowAssigned,
-            }
-          )
-        }
+      const initiallyAssigned = initialAssignments[i].find((g) => g.groupId === groupId).assignedSlots;
+      const nowAssigned = assignedSlots[i].find((g) => g.groupId === groupId).assignedSlots;
+      if (initiallyAssigned !== nowAssigned) {
+        changedAssignments.push(
+          {
+            resourceIndex: i,
+            resourceId: resources[i].id,
+            initiallyAssigned: initiallyAssigned,
+            nowAssigned: nowAssigned,
+          }
+        )
       }
-      return changedAssignments;
     }
+    return changedAssignments;
   }
 
   async function sendChanges() {
@@ -155,7 +151,7 @@ const ResourceAssignment = (props) => {
 
   return (
     <>
-      {loading || loading2 || initialAssignments.length === 0 ? <p>loading</p> :
+      {loading || loadingInitial ? <p>loading</p> :
         <div className={style.pageGrid}>
           <div className={style.column}>
             <h1>Unassigned</h1>
