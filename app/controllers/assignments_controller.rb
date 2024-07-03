@@ -10,11 +10,11 @@ class AssignmentsController < ApplicationController
   end
 
   def raw_data
-    org = Organisation.first
+    get_organisation
     response = {
-      organisationId: org.id,
-      resourceGroups: org.resource_groups.select(:id, :name),
-      assignments: org.assigned_resources,
+      organisationId: @organisation.id,
+      resourceGroups: @organisation.resource_groups.select(:id, :name),
+      assignments: @organisation.assigned_resources,
     }
     render json: response
   end
@@ -39,9 +39,13 @@ class AssignmentsController < ApplicationController
 
   private
 
-  def get_resource_data
+  def get_organisation
     params.permit :organisation_id
     @organisation = Organisation.find(params[:organisation_id])
+  end
+
+  def get_resource_data
+    get_organisation
     @resource_groups = @organisation.resource_groups
     @unassigned_resources = @organisation.unassigned_resources
   end

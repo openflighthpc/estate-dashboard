@@ -23,13 +23,13 @@ function AssignedResource({ resourceName, noSlots, unassigned, onInputChange, on
 const ResourceAssignment = (props) => {
 
   const [groups, setGroups] = useState([]);
-  const [organisationId, setOrganisationId] = useState([]);
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [error, setError] = useState(null);
   const [assignedSlots, setAssignedSlots] = useState([]);
   const [initialAssignments, setInitialAssignment] = useState([]);
+  const organisationId = new URLSearchParams(window.location.search).get('organisation_id');
 
   useEffect(() => {
     fetchData();
@@ -38,12 +38,13 @@ const ResourceAssignment = (props) => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('/assignment/raw-data'); // Replace with your API endpoint
+      const response = await fetch('/assignment/raw-data?' + new URLSearchParams({
+        organisation_id: organisationId,
+      }).toString());
       if (!response.ok) {
         throw new Error('Network response was not ok.');
       }
       const data = await response.json();
-      setOrganisationId(data.organisationId);
       setGroups(data.resourceGroups);
       setResources(data.assignments);
       setAssignedSlots(data.assignments.map((res) => res.assignments));
@@ -55,7 +56,9 @@ const ResourceAssignment = (props) => {
   };
   const setInitialData = async () => {
     try {
-      const response = await fetch('/assignment/raw-data'); // Replace with your API endpoint
+      const response = await fetch('/assignment/raw-data?' + new URLSearchParams({
+        organisation_id: organisationId,
+      }).toString());
       if (!response.ok) {
         throw new Error('Network response was not ok.');
       }
