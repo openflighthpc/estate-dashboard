@@ -20,8 +20,9 @@ class AssignmentsController < ApplicationController
   end
 
   def send_message
-    org = Organisation.first
-    all_changes = JSON.parse(request.raw_post)
+    data = JSON.parse(request.raw_post)
+    org = Organisation.find(data['organisationId'])
+    all_changes = data['changes']
     msg = ["-" * 30, "Resource assignment request received from *#{org.name}*:", "\n"]
     all_changes.each do |res_group|
       msg << "*#{ResourceGroup.find(res_group["groupId"]).name}*"

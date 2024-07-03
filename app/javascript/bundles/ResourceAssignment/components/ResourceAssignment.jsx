@@ -23,6 +23,7 @@ function AssignedResource({ resourceName, noSlots, unassigned, onInputChange, on
 const ResourceAssignment = (props) => {
 
   const [groups, setGroups] = useState([]);
+  const [organisationId, setOrganisationId] = useState([]);
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingInitial, setLoadingInitial] = useState(true);
@@ -42,6 +43,7 @@ const ResourceAssignment = (props) => {
         throw new Error('Network response was not ok.');
       }
       const data = await response.json();
+      setOrganisationId(data.organisationId);
       setGroups(data.resourceGroups);
       setResources(data.assignments);
       setAssignedSlots(data.assignments.map((res) => res.assignments));
@@ -106,7 +108,6 @@ const ResourceAssignment = (props) => {
     const groupId = groups[groupIndex].id;
     let changedAssignments = [];
     for (let i = 0; i < resources.length; i++) {
-
       const initiallyAssigned = initialAssignments[i].find((g) => g.groupId === groupId).assignedSlots;
       const nowAssigned = assignedSlots[i].find((g) => g.groupId === groupId).assignedSlots;
       if (initiallyAssigned !== nowAssigned) {
@@ -125,11 +126,14 @@ const ResourceAssignment = (props) => {
 
   async function sendChanges() {
     try {
-      let data = [];
+      let data = {
+        organisationId: organisationId,
+        changes: [],
+      };
       for (let i = 0; i < groups.length; i++) {
         const changes = changesForGroup(i);
         if (changes.length > 0) {
-          data.push({ groupId: groups[i].id, changes: changes });
+          data.changes.push({ groupId: groups[i].id, changes: changes });
         }
       }
       const response = await fetch("http://127.0.0.1:3000/assignment/send-message", {
