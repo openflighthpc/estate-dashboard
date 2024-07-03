@@ -35,9 +35,13 @@ class Organisation < ApplicationRecord
         id: res.id,
         name: [res.platform, res.resource_class].join(' '),
         assignments: resource_groups.map do |group|
+          group_assignments = res.resource_assignments.where(resource_group_id: group.id)
           {
             groupId: group.id,
-            assignedSlots: res.resource_assignments.find_by(resource_group_id: group.id)&.no_slots || 0,
+            assignedSlots: {
+              dedicated: group_assignments.find_by(burst: false)&.no_slots || 0,
+              burst: group_assignments.find_by(burst: true)&.no_slots || 0,
+            }
           }
         end,
         totalSlots: res.slot_capacity,

@@ -28,7 +28,8 @@ class AssignmentsController < ApplicationController
       msg << "*#{ResourceGroup.find(res_group["groupId"]).name}*"
       res_group["changes"].each do |change|
         res = Resource.find(change["resourceId"])
-        msg << "Resource #{res.id} - #{res.platform} #{res.resource_class}:   #{change["initiallyAssigned"]} --> #{change["nowAssigned"]}"
+        change_string = "#{change["initiallyAssigned"]} --> #{change["nowAssigned"]}"
+        msg << "Resource #{res.id} - #{res.platform} #{res.resource_class} #{'burst' if change["isBurst"]}:   #{change_string}"
       end
       msg << "\n"
     end

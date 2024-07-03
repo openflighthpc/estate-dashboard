@@ -45,6 +45,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_125945) do
 
   create_table "resource_assignments", force: :cascade do |t|
     t.integer "no_slots"
+    t.boolean "burst", default: false
     t.integer "resource_id"
     t.integer "resource_group_id"
     t.datetime "created_at", null: false

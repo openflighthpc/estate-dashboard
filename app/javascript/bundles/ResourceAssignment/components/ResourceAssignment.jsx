@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useRef, useState} from 'react';
 import * as style from './ResourceAssignment.module.css';
 
-function AssignedResource({ resourceName, noSlots, unassigned, onInputChange, onSlotIncrease, onSlotDecrease }) {
+function AssignedResource({ resourceName, noSlots, unassigned, onInputChange, onSlotIncrease, onSlotDecrease, isBurst }) {
   return (
     <p>
-      <strong>{resourceName}</strong>
+      <strong>{resourceName}{isBurst ? ' burst' : ''}</strong>
       No.slots:
       <input id="name" type="text" value={noSlots} onChange={onInputChange} />
       <button
@@ -71,30 +71,36 @@ const ResourceAssignment = (props) => {
     }
   };
 
+  function assignmentType(isBurst = false) {
+    return isBurst ? 'burst' : 'dedicated';
+  }
+
   function unassignedSlots(index) {
     let assigned = [...assignedSlots][index];
     const totalSlots = resources[index].totalSlots;
-    return totalSlots - assigned.map((a) => a.assignedSlots).reduce((partialSum, a) => partialSum + a, 0);
+    const totalAssignedSlots = assigned.map((a) => a.assignedSlots.dedicated + a.assignedSlots.burst).reduce((partialSum, a) => partialSum + a, 0);
+    return totalSlots - totalAssignedSlots;
   }
 
-  function handleInputChange(e, groupId, resourceIndex) {
+  function handleInputChange(e, groupId, resourceIndex, isBurst) {
     if (e.target.value >= 0) {
-      const maxSlots = unassignedSlots(resourceIndex) + assignedSlots[resourceIndex].find((g) => g.groupId === groupId).assignedSlots;
+      const currentAssignments = assignedSlots[resourceIndex].find((g) => g.groupId === groupId).assignedSlots[assignmentType(isBurst)];
+      const maxSlots = unassignedSlots(resourceIndex) + currentAssignments;
       if ( e.target.value <= maxSlots) {
         let newAssigned = [...assignedSlots];
-        newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots = Number(e.target.value);
+        newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots[assignmentType(isBurst)] = Number(e.target.value);
         setAssignedSlots(newAssigned);
       }
     }
   }
-  function handleIncrease(groupId, resourceIndex) {
+  function handleIncrease(groupId, resourceIndex, isBurst) {
     let newAssigned = [...assignedSlots];
-    newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots += 1;
+    newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots[assignmentType(isBurst)] += 1;
     setAssignedSlots(newAssigned);
   }
-  function handleDecrease(groupId, resourceIndex) {
+  function handleDecrease(groupId, resourceIndex, isBurst) {
     let newAssigned = [...assignedSlots];
-    newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots -= 1;
+    newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots[assignmentType(isBurst)] -= 1;
     setAssignedSlots(newAssigned);
   }
 
@@ -114,14 +120,28 @@ const ResourceAssignment = (props) => {
       const initiallyAssigned = initialAssignments[i].find((g) => g.groupId === groupId).assignedSlots;
       const nowAssigned = assignedSlots[i].find((g) => g.groupId === groupId).assignedSlots;
       if (initiallyAssigned !== nowAssigned) {
-        changedAssignments.push(
-          {
-            resourceIndex: i,
-            resourceId: resources[i].id,
-            initiallyAssigned: initiallyAssigned,
-            nowAssigned: nowAssigned,
-          }
-        )
+        if (initiallyAssigned.dedicated !== nowAssigned.dedicated) {
+          changedAssignments.push(
+            {
+              resourceIndex: i,
+              resourceId: resources[i].id,
+              initiallyAssigned: initiallyAssigned.dedicated,
+              nowAssigned: nowAssigned.dedicated,
+              isBurst: false,
+            }
+          )
+        }
+        if (initiallyAssigned.burst !== nowAssigned.burst) {
+          changedAssignments.push(
+            {
+              resourceIndex: i,
+              resourceId: resources[i].id,
+              initiallyAssigned: initiallyAssigned.burst,
+              nowAssigned: nowAssigned.burst,
+              isBurst: true,
+            }
+          )
+        }
       }
     }
     return changedAssignments;
@@ -180,11 +200,21 @@ const ResourceAssignment = (props) => {
                             <>
                               <AssignedResource
                                 resourceName={r.name}
-                                noSlots={assignedSlots[index].find((a) => a.groupId === g.id).assignedSlots}
+                                noSlots={assignedSlots[index].find((a) => a.groupId === g.id).assignedSlots.dedicated}
                                 unassigned={unassignedSlots(index)}
                                 onInputChange={(e) => handleInputChange(e, g.id, index)}
                                 onSlotIncrease={() => handleIncrease(g.id, index)}
                                 onSlotDecrease={() => handleDecrease(g.id, index)}
+                                isBurst={false}
+                              />
+                              <AssignedResource
+                                resourceName={r.name}
+                                noSlots={assignedSlots[index].find((a) => a.groupId === g.id).assignedSlots.burst}
+                                unassigned={unassignedSlots(index)}
+                                onInputChange={(e) => handleInputChange(e, g.id, index, true)}
+                                onSlotIncrease={() => handleIncrease(g.id, index, true)}
+                                onSlotDecrease={() => handleDecrease(g.id, index, true)}
+                                isBurst={true}
                               />
                             </>
                           )
@@ -208,7 +238,7 @@ const ResourceAssignment = (props) => {
                         {changesForGroup(index).map((change) => {
                           return (
                             <p>
-                              {resources[change.resourceIndex].name}
+                              {resources[change.resourceIndex].name} {change.isBurst ? 'burst' : ''}
                               <br/>
                               {change.initiallyAssigned} --> {change.nowAssigned}
                             </p>
