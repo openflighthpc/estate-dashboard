@@ -22,17 +22,31 @@ class AssignmentsController < ApplicationController
   def send_message
     data = JSON.parse(request.raw_post)
     org = Organisation.find(data['organisationId'])
+    assignment_change_request = AssignmentChangeRequest.new
     all_changes = data['changes']
     msg = ["-" * 30, "Resource assignment request received from *#{org.name}*:", "\n"]
     all_changes.each do |res_group|
-      msg << "*#{ResourceGroup.find(res_group["groupId"]).name}*"
+      group_id = res_group["groupId"]
+      msg << "*#{ResourceGroup.find(group_id).name}*"
       res_group["changes"].each do |change|
-        res = Resource.find(change["resourceId"])
-        change_string = "#{change["initiallyAssigned"]} --> #{change["nowAssigned"]}"
-        msg << "Resource #{res.id} - #{res.platform} #{res.resource_class} #{'burst' if change["isBurst"]}:   #{change_string}"
+        res_id = change["resourceId"]
+        slots_to_assign = change["nowAssigned"]
+        is_burst = change["isBurst"]
+        res = Resource.find(res_id)
+        assignment = ResourceAssignment.new(
+          no_slots: slots_to_assign,
+          resource_id: res_id,
+          resource_group_id: group_id,
+          burst: is_burst,
+          pending: true,
+        )
+        assignment_change_request.resource_assignments << assignment
+        change_string = "#{change["initiallyAssigned"]} --> #{slots_to_assign}"
+        msg << "Resource #{res.id} - #{res.platform} #{res.resource_class} #{'burst' if is_burst}:   #{change_string}"
       end
       msg << "\n"
     end
+    assignment_change_request.save
     org.send_message(msg.join("\n"))
     response = { result: "Message sent successfully" }
     render json: response

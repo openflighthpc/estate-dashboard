@@ -6,6 +6,7 @@ class CreateResourceAssignments < ActiveRecord::Migration[7.1]
       t.boolean :pending, default: false
       t.references :resource, index: true, foreign_key: true
       t.references :resource_group, index: true, foreign_key: true
+      t.references :assignment_change_request, index: true, foreign_key: true
       t.timestamps
     end
   end
