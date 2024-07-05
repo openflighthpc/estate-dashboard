@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useRef, useState} from 'react';
 import * as style from './ResourceAssignment.module.css';
 
-function AssignedResource({ assignmentType, noSlots, unassigned, onInputChange, onSlotIncrease, onSlotDecrease }) {
+function AssignedResourceEditor({ assignmentType, noSlots, unassigned, onInputChange, onSlotIncrease, onSlotDecrease }) {
   return (
     <>
       {assignmentType}:
@@ -198,7 +198,7 @@ const ResourceAssignment = (props) => {
                           return (
                             <p>
                               <strong>{r.name}</strong><br/>
-                              <AssignedResource
+                              <AssignedResourceEditor
                                 assignmentType={assignmentType(false)}
                                 noSlots={assignedSlots[index].find((a) => a.groupId === g.id).assignedSlots.dedicated}
                                 unassigned={unassignedSlots(index)}
@@ -206,7 +206,7 @@ const ResourceAssignment = (props) => {
                                 onSlotIncrease={() => handleIncrease(g.id, index)}
                                 onSlotDecrease={() => handleDecrease(g.id, index)}
                               />
-                              <AssignedResource
+                              <AssignedResourceEditor
                                 assignmentType={assignmentType(true)}
                                 noSlots={assignedSlots[index].find((a) => a.groupId === g.id).assignedSlots.burst}
                                 unassigned={unassignedSlots(index)}
