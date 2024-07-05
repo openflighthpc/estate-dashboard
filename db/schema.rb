@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_05_083843) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_05_102242) do
   create_table "assignment_change_requests", force: :cascade do |t|
     t.string "status", default: "PENDING"
     t.datetime "created_at", null: false
@@ -49,16 +49,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_05_083843) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "resource_assignments", force: :cascade do |t|
+  create_table "pending_resource_assignments", force: :cascade do |t|
     t.integer "no_slots"
-    t.boolean "burst", default: false
-    t.boolean "pending", default: false
+    t.boolean "burst"
     t.integer "resource_id"
     t.integer "resource_group_id"
     t.integer "assignment_change_request_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["assignment_change_request_id"], name: "index_resource_assignments_on_assignment_change_request_id"
+    t.index ["assignment_change_request_id"], name: "idx_on_assignment_change_request_id_bd888a7b3d"
+    t.index ["resource_group_id"], name: "index_pending_resource_assignments_on_resource_group_id"
+    t.index ["resource_id"], name: "index_pending_resource_assignments_on_resource_id"
+  end
+
+  create_table "resource_assignments", force: :cascade do |t|
+    t.integer "no_slots"
+    t.boolean "burst", default: false
+    t.integer "resource_id"
+    t.integer "resource_group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["resource_group_id"], name: "index_resource_assignments_on_resource_group_id"
     t.index ["resource_id"], name: "index_resource_assignments_on_resource_id"
   end
@@ -85,7 +95,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_05_083843) do
     t.index ["organisation_id"], name: "index_resources_on_organisation_id"
   end
 
-  add_foreign_key "resource_assignments", "assignment_change_requests"
+  add_foreign_key "pending_resource_assignments", "assignment_change_requests"
+  add_foreign_key "pending_resource_assignments", "resource_groups"
+  add_foreign_key "pending_resource_assignments", "resources"
   add_foreign_key "resource_assignments", "resource_groups"
   add_foreign_key "resource_assignments", "resources"
   add_foreign_key "resource_groups", "organisations"

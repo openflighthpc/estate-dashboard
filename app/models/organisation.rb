@@ -35,7 +35,7 @@ class Organisation < ApplicationRecord
         id: res.id,
         name: [res.platform, res.resource_class].join(' '),
         assignments: resource_groups.map do |group|
-          group_assignments = res.resource_assignments.where(resource_group_id: group.id, pending: false)
+          group_assignments = res.resource_assignments.where(resource_group_id: group.id)
           {
             groupId: group.id,
             assignedSlots: {

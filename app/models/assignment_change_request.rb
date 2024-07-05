@@ -1,5 +1,5 @@
 class AssignmentChangeRequest < ApplicationRecord
-  has_many :resource_assignments
+  has_many :pending_resource_assignments
 
   validates :status, inclusion: {
     in: %w(PENDING COMPLETED CANCELLED),

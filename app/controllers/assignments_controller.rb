@@ -22,7 +22,7 @@ class AssignmentsController < ApplicationController
   def send_message
     data = JSON.parse(request.raw_post)
     org = Organisation.find(data['organisationId'])
-    assignment_change_request = AssignmentChangeRequest.new
+    assignment_change_request = AssignmentChangeRequest.create
     all_changes = data['changes']
     msg = ["-" * 30, "Resource assignment request received from *#{org.name}*:", "\n"]
     all_changes.each do |res_group|
@@ -33,20 +33,19 @@ class AssignmentsController < ApplicationController
         slots_to_assign = change["nowAssigned"]
         is_burst = change["isBurst"]
         res = Resource.find(res_id)
-        assignment = ResourceAssignment.new(
+        assignment = PendingResourceAssignment.new(
           no_slots: slots_to_assign,
           resource_id: res_id,
           resource_group_id: group_id,
           burst: is_burst,
-          pending: true,
+          assignment_change_request_id: assignment_change_request.id
         )
-        assignment_change_request.resource_assignments << assignment
+        assignment_change_request.pending_resource_assignments << assignment
         change_string = "#{change["initiallyAssigned"]} --> #{slots_to_assign}"
         msg << "Resource #{res.id} - #{res.platform} #{res.resource_class} #{'burst' if is_burst}:   #{change_string}"
       end
       msg << "\n"
     end
-    assignment_change_request.save
     org.send_message(msg.join("\n"))
     response = { result: "Message sent successfully" }
     render json: response
