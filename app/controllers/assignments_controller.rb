@@ -23,30 +23,20 @@ class AssignmentsController < ApplicationController
     data = JSON.parse(request.raw_post)
     org = Organisation.find(data['organisationId'])
     assignment_change_request = AssignmentChangeRequest.create
-    all_changes = data['changes']
-    msg = ["-" * 30, "Resource assignment request received from *#{org.name}*:", "\n"]
-    all_changes.each do |res_group|
+    data['changes'].each do |res_group|
       group_id = res_group["groupId"]
-      msg << "*#{ResourceGroup.find(group_id).name}*"
       res_group["changes"].each do |change|
-        res_id = change["resourceId"]
-        slots_to_assign = change["nowAssigned"]
-        is_burst = change["isBurst"]
-        res = Resource.find(res_id)
         assignment = PendingResourceAssignment.new(
-          no_slots: slots_to_assign,
-          resource_id: res_id,
+          no_slots: change["nowAssigned"],
+          resource_id: change["resourceId"],
           resource_group_id: group_id,
-          burst: is_burst,
+          burst: change["isBurst"],
           assignment_change_request_id: assignment_change_request.id
         )
         assignment_change_request.pending_resource_assignments << assignment
-        change_string = "#{change["initiallyAssigned"]} --> #{slots_to_assign}"
-        msg << "Resource #{res.id} - #{res.platform} #{res.resource_class} #{'burst' if is_burst}:   #{change_string}"
       end
-      msg << "\n"
     end
-    org.send_message(msg.join("\n"))
+    org.send_message(assignment_change_request.slack_message)
     response = { result: "Message sent successfully" }
     render json: response
   end
