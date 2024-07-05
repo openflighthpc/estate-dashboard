@@ -4,4 +4,8 @@ class PendingResourceAssignment < ApplicationRecord
   belongs_to :resource
 
   delegate :organisation, to: :resource
+
+  def pretty_display
+    "Resource #{resource.id} - #{resource.platform} #{resource.resource_class} #{'burst' if burst}:  #{no_slots}"
+  end
 end
