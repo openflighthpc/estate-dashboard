@@ -28,7 +28,6 @@ const ResourceAssignment = (props) => {
   const [assignedSlots, setAssignedSlots] = useState([]);
   const [assignedBurstSlots, setAssignedBurstSlots] = useState([]);
   const [initialAssignments, setInitialAssignment] = useState([]);
-  const [initialBurstAssignments, setInitialBurstAssignment] = useState([]);
   const organisationId = new URLSearchParams(window.location.search).get('organisation_id');
 
   useEffect(() => {
@@ -47,8 +46,11 @@ const ResourceAssignment = (props) => {
       const data = await response.json();
       setGroups(data.resourceGroups);
       setResources(data.assignments);
-      setAssignedSlots(data.assignments.dedicated.map((res) => res.assignments));
-      setAssignedBurstSlots(data.assignments.burst.map((res) => res.assignments));
+      setAssignedSlots({
+        dedicated: data.assignments.dedicated.map((res) => res.assignments),
+        burst: data.assignments.burst.map((res) => res.assignments),
+      });
+      // setAssignedBurstSlots(data.assignments.burst.map((res) => res.assignments));
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -64,8 +66,10 @@ const ResourceAssignment = (props) => {
         throw new Error('Network response was not ok.');
       }
       const data = await response.json();
-      setInitialAssignment(data.assignments.dedicated.map((res) => res.assignments));
-      setInitialBurstAssignment(data.assignments.burst.map((res) => res.assignments));
+      setInitialAssignment({
+        dedicated: data.assignments.dedicated.map((res) => res.assignments),
+        burst: data.assignments.burst.map((res) => res.assignments),
+      });
       setLoadingInitial(false);
     } catch (error) {
       setError(error.message);
@@ -78,12 +82,7 @@ const ResourceAssignment = (props) => {
   }
 
   function unassignedSlots(index, isBurst = false) {
-    let assigned;
-    if (isBurst) {
-      assigned = [...assignedBurstSlots][index];
-    } else {
-      assigned = [...assignedSlots][index];
-    }
+    let assigned = assignedSlots[assignmentType(isBurst)][index];
     const totalSlots = resources[assignmentType(isBurst)][index].totalSlots;
     const totalAssignedSlots = assigned.map((a) => a.assignedSlots).reduce((partialSum, a) => partialSum + a, 0);
     return totalSlots - totalAssignedSlots;
@@ -91,52 +90,24 @@ const ResourceAssignment = (props) => {
 
   function handleInputChange(e, groupId, resourceIndex, isBurst) {
     if (e.target.value >= 0) {
-      let assigned;
-      if (isBurst) {
-        assigned = [...assignedBurstSlots];
-      } else {
-        assigned = [...assignedSlots];
-      }
-      const currentAssignments = assigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots;
+      const currentAssignments = assignedSlots[assignmentType(isBurst)][resourceIndex].find((g) => g.groupId === groupId).assignedSlots;
       const maxSlots = unassignedSlots(resourceIndex, isBurst) + currentAssignments;
       if ( e.target.value <= maxSlots) {
-        let newAssigned = [...assigned];
-        newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots = Number(e.target.value);
-        if (isBurst) {
-          setAssignedBurstSlots(newAssigned);
-        } else {
-          setAssignedSlots(newAssigned);
-        }
+        let newAssigned = {...assignedSlots};
+        newAssigned[assignmentType(isBurst)][resourceIndex].find((g) => g.groupId === groupId).assignedSlots = Number(e.target.value);
+        setAssignedSlots(newAssigned);
       }
     }
   }
   function handleIncrease(groupId, resourceIndex, isBurst) {
-    let newAssigned;
-    if (isBurst) {
-      newAssigned = [...assignedBurstSlots];
-    } else {
-      newAssigned = [...assignedSlots];
-    }
-    newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots += 1;
-    if (isBurst) {
-      setAssignedBurstSlots(newAssigned);
-    } else {
-      setAssignedSlots(newAssigned);
-    }
+    let newAssigned = {...assignedSlots};
+    newAssigned[assignmentType(isBurst)][resourceIndex].find((g) => g.groupId === groupId).assignedSlots += 1;
+    setAssignedSlots(newAssigned);
   }
   function handleDecrease(groupId, resourceIndex, isBurst) {
-    let newAssigned;
-    if (isBurst) {
-      newAssigned = [...assignedBurstSlots];
-    } else {
-      newAssigned = [...assignedSlots];
-    }
-    newAssigned[resourceIndex].find((g) => g.groupId === groupId).assignedSlots -= 1;
-    if (isBurst) {
-      setAssignedBurstSlots(newAssigned);
-    } else {
-      setAssignedSlots(newAssigned);
-    }
+    let newAssigned = {...assignedSlots};
+    newAssigned[assignmentType(isBurst)][resourceIndex].find((g) => g.groupId === groupId).assignedSlots -= 1;
+    setAssignedSlots(newAssigned);
   }
 
   function anyChanges() {
@@ -152,8 +123,8 @@ const ResourceAssignment = (props) => {
     const groupId = groups[groupIndex].id;
     let changedAssignments = [];
     for (let i = 0; i < resources.dedicated.length; i++) {
-      const initiallyAssigned = initialAssignments[i].find((g) => g.groupId === groupId).assignedSlots;
-      const nowAssigned = assignedSlots[i].find((g) => g.groupId === groupId).assignedSlots;
+      const initiallyAssigned = initialAssignments.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
+      const nowAssigned = assignedSlots.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
       if (initiallyAssigned !== nowAssigned) {
         changedAssignments.push(
           {
@@ -167,8 +138,8 @@ const ResourceAssignment = (props) => {
       }
     }
     for (let i = 0; i < resources.burst.length; i++) {
-      const initiallyAssigned = initialBurstAssignments[i].find((g) => g.groupId === groupId).assignedSlots;
-      const nowAssigned = assignedBurstSlots[i].find((g) => g.groupId === groupId).assignedSlots;
+      const initiallyAssigned = initialAssignments.burst[i].find((g) => g.groupId === groupId).assignedSlots;
+      const nowAssigned = assignedSlots.burst[i].find((g) => g.groupId === groupId).assignedSlots;
       if (initiallyAssigned !== nowAssigned) {
         changedAssignments.push(
           {
@@ -242,7 +213,7 @@ const ResourceAssignment = (props) => {
                             <p>
                               <strong>{r.name}</strong>
                               <AssignedResourceEditor
-                                noSlots={assignedSlots[index].find((a) => a.groupId === g.id).assignedSlots}
+                                noSlots={assignedSlots.dedicated[index].find((a) => a.groupId === g.id).assignedSlots}
                                 unassigned={unassignedSlots(index)}
                                 onInputChange={(e) => handleInputChange(e, g.id, index)}
                                 onSlotIncrease={() => handleIncrease(g.id, index)}
@@ -259,7 +230,7 @@ const ResourceAssignment = (props) => {
                             <p>
                               <strong>{r.name}</strong>
                               <AssignedResourceEditor
-                                noSlots={assignedBurstSlots[index].find((a) => a.groupId === g.id).assignedSlots}
+                                noSlots={assignedSlots.burst[index].find((a) => a.groupId === g.id).assignedSlots}
                                 unassigned={unassignedSlots(index, true)}
                                 onInputChange={(e) => handleInputChange(e, g.id, index, true)}
                                 onSlotIncrease={() => handleIncrease(g.id, index, true)}
