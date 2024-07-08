@@ -6,6 +6,6 @@ class PendingResourceAssignment < ApplicationRecord
   delegate :organisation, to: :resource
 
   def pretty_display
-    "Resource #{resource.id} - #{resource.platform} #{resource.resource_class} #{'burst' if burst}:  #{no_slots}"
+    "Resource #{resource.id} - #{resource.platform} #{resource.resource_class} #{'(burst)' if resource.burst}:  #{no_slots}"
   end
 end

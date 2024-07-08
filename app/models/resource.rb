@@ -21,4 +21,18 @@ class Resource < ApplicationRecord
   def unassigned_slots
     slot_capacity - resource_assignments.pluck(:no_slots).sum
   end
+
+  def assignment_details
+    {
+      id: id,
+      name: [platform, resource_class].join(' '),
+      assignments: organisation.resource_groups.map do |group|
+        {
+          groupId: group.id,
+          assignedSlots: resource_assignments.find_by(resource_group_id: group.id)&.no_slots || 0,
+        }
+      end,
+      totalSlots: slot_capacity,
+    }
+  end
 end

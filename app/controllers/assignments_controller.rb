@@ -30,7 +30,6 @@ class AssignmentsController < ApplicationController
           no_slots: change["nowAssigned"],
           resource_id: change["resourceId"],
           resource_group_id: group_id,
-          burst: change["isBurst"],
           assignment_change_request_id: assignment_change_request.id
         )
         assignment_change_request.pending_resource_assignments << assignment
