@@ -212,7 +212,7 @@ const ResourceAssignment = (props) => {
                 groups.map(g => {
                   return (
                     <div className={style.groupCard}>
-                      <div>
+                      <div className={style.groupCardHeader}>
                         <h3>{g.name}</h3>
                         <span>{groupTotalAssignedSlots(g.id)} slots</span>
                       </div>
