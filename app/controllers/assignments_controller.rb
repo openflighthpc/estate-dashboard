@@ -35,8 +35,8 @@ class AssignmentsController < ApplicationController
         assignment_change_request.pending_resource_assignments << assignment
       end
     end
-    org.send_message(assignment_change_request.slack_message)
-    response = { result: "Message sent successfully" }
+    r = org.send_message(assignment_change_request.slack_message)
+    response = { result: r.success? ? "Request sent successfully" : "Request failed" }
     render json: response
   end
 
