@@ -81,6 +81,12 @@ const ResourceAssignment = (props) => {
     return isBurst ? 'burst' : 'dedicated';
   }
 
+  function groupTotalAssignedSlots(groupId) {
+    const assignedDedicated = assignedSlots.dedicated.map((res) => res.find((g) => g.groupId === groupId).assignedSlots);
+    const assignedBurst = assignedSlots.burst.map((res) => res.find((g) => g.groupId === groupId).assignedSlots);
+    return assignedDedicated.concat(assignedBurst).reduce((partialSum, a) => partialSum + a, 0);
+  }
+
   function unassignedSlots(index, isBurst = false) {
     let assigned = assignedSlots[assignmentType(isBurst)][index];
     const totalSlots = resources[assignmentType(isBurst)][index].totalSlots;
@@ -206,7 +212,10 @@ const ResourceAssignment = (props) => {
                 groups.map(g => {
                   return (
                     <div className={style.groupCard}>
-                      <h3>{g.name}</h3>
+                      <div>
+                        <h3>{g.name}</h3>
+                        <span>{groupTotalAssignedSlots(g.id)} slots</span>
+                      </div>
                       {
                         resources.dedicated.map((r, index) => {
                           return (
