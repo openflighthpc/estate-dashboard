@@ -35,7 +35,6 @@ const ResourceAssignment = (props) => {
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [error, setError] = useState(null);
   const [assignedSlots, setAssignedSlots] = useState([]);
-  const [assignedBurstSlots, setAssignedBurstSlots] = useState([]);
   const [initialAssignments, setInitialAssignment] = useState([]);
   const organisationId = new URLSearchParams(window.location.search).get('organisation_id');
 
@@ -211,21 +210,28 @@ const ResourceAssignment = (props) => {
         <div className={style.pageGrid}>
           <div className={style.column}>
             <div className={[style.flexSpaceBetween, style.header].join(' ')}>
-              <h3>Unassigned resources</h3>
+              <h3>Unassigned</h3>
               <span>{totalUnassignedSlots()} slots</span>
             </div>
             <div className={style.scrollContainer}>
-              {resources.dedicated.map((res, index) => (
-                <p><strong>{res.name}</strong> No slots: {unassignedSlots(index)}</p>
-              ))}
-              <strong>Burst</strong>
-              {resources.burst.map((res, index) => (
-                <p><strong>{res.name}</strong> No slots: {unassignedSlots(index, true)}</p>
-              ))}
+              <div className={[style.resourcesContainer, style.unassigned].join(' ')}>
+                {resources.dedicated.map((res, index) => (
+                  <div className={style.flexSpaceBetween}>
+                    <span>{res.name}</span>
+                    <span>{unassignedSlots(index)}</span>
+                  </div>
+                ))}
+                <strong>Burst</strong>
+                {resources.burst.map((res, index) => (
+                  <div className={style.flexSpaceBetween}>
+                    <span>{res.name}</span>
+                    <span>{unassignedSlots(index, true)}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className={style.column}>
-            <h1>Assigned</h1>
             <div className={style.scrollContainer}>
               {
                 groups.map(g => {
@@ -275,7 +281,7 @@ const ResourceAssignment = (props) => {
             </div>
           </div>
           <div className={style.column}>
-            <h1>Changes</h1>
+            <h3>Changes</h3>
             <div className={style.scrollContainer}>
               <div className={style.changes}>
                 {
@@ -283,7 +289,7 @@ const ResourceAssignment = (props) => {
                     if (changesForGroup(index).length > 0) {
                       return (
                         <>
-                          <h3>{g.name}</h3>
+                          <strong>{g.name}</strong>
                           {changesForGroup(index).map((change) => {
                             return (
                               <p>

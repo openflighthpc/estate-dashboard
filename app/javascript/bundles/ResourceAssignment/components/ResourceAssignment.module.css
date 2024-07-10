@@ -64,7 +64,8 @@
     display: grid;
     grid-template-rows: auto;
     gap: 0.5rem;
-    padding-inline: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 .burst.resourcesContainer {
     position: relative;
@@ -80,6 +81,14 @@
     padding: 0.1rem;
     background-color: white;
     width: min-content;
+}
+.groupCard .resourcesContainer {
+    padding-inline: 1rem;
+}
+.unassigned.resourcesContainer .flexSpaceBetween {
+    gap: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .inputContainer {
