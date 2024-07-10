@@ -6,16 +6,22 @@ function AssignedResourceEditor({ resourceName, noSlots, unassigned, onInputChan
   return (
     <div className={[style.flexSpaceBetween, style.inputContainer].join(' ')}>
       <strong>{resourceName}</strong>
-      <div>
+      <div className={style.flexSpaceBetween}>
         <input id="name" type="text" value={noSlots} onChange={onInputChange} />
-        <button
-          disabled={unassigned <= 0}
-          onClick={onSlotIncrease}
-        >+</button>
-        <button
-          disabled={noSlots <= 0}
-          onClick={onSlotDecrease}
-        >-</button>
+        <div className={style.buttons}>
+          <button
+            disabled={unassigned <= 0}
+            onClick={onSlotIncrease}
+          >
+            <span>+</span>
+          </button>
+          <button
+            disabled={noSlots <= 0}
+            onClick={onSlotDecrease}
+          >
+            <span>-</span>
+          </button>
+        </div>
       </div>
     </div>
   );

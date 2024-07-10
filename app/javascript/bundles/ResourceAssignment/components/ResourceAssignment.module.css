@@ -2,6 +2,10 @@
     --corner-radius: 1rem;
 }
 
+.inputContainer {
+    --button-height: 0.6rem;
+}
+
 .bright {
     color: green;
     font-weight: bold;
@@ -69,12 +73,54 @@
 }
 
 .inputContainer {
+    display: flex;
     white-space: nowrap;
 }
 input {
-    width: 2.5rem;
+    width: 2rem;
     text-align: center;
     margin-left: 1rem;
+    padding-left: 0.5rem;
+    border-radius: var(--corner-radius) 0 0 var(--corner-radius);
+    border: solid 1px dodgerblue;
+    border-right: none;
+    height: calc(2 * var(--button-height) + 1px);
+}
+.inputContainer .buttons {
+    display: inline-grid;
+    grid-template-rows: 1fr 1fr;
+    row-gap: 1px;
+    border-radius: 0 var(--corner-radius) var(--corner-radius) 0;
+    border: solid 1px dodgerblue;
+    border-left: none;
+}
+.inputContainer button {
+    background-color: dodgerblue;
+    color: white;
+    font-size: var(--button-height);
+    line-height: var(--button-height);
+    width: 0.8rem;
+    height: var(--button-height);
+    margin-right: 1px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.inputContainer button span {
+    position: relative;
+    left: -1px;
+}
+.inputContainer button:first-child {
+    margin-top: 1px;
+    border-radius: 0 var(--corner-radius) 0 0;
+}
+.inputContainer button:first-child span {
+    top: 1px;
+}
+.inputContainer button:last-child {
+    margin-bottom: 1px;
+    border-radius: 0 0 var(--corner-radius) 0;
 }
 
 .changes {
