@@ -96,6 +96,12 @@ const ResourceAssignment = (props) => {
     return assignedDedicated.concat(assignedBurst).reduce((partialSum, a) => partialSum + a, 0);
   }
 
+  function totalUnassignedSlots() {
+    let unassigned = resources.dedicated.map((res, index) => unassignedSlots(index));
+    unassigned.push(...resources.burst.map((res, index) => unassignedSlots(index, true)));
+    return unassigned.reduce((partialSum, a) => partialSum + a, 0);
+  }
+
   function unassignedSlots(index, isBurst = false) {
     let assigned = assignedSlots[assignmentType(isBurst)][index];
     const totalSlots = resources[assignmentType(isBurst)][index].totalSlots;
@@ -204,13 +210,15 @@ const ResourceAssignment = (props) => {
       {loading || loadingInitial ? <p>loading</p> :
         <div className={style.pageGrid}>
           <div className={style.column}>
-            <h1>Unassigned</h1>
+            <div className={[style.flexSpaceBetween, style.header].join(' ')}>
+              <h3>Unassigned resources</h3>
+              <span>{totalUnassignedSlots()} slots</span>
+            </div>
             <div className={style.scrollContainer}>
-              <h3>Dedicated</h3>
               {resources.dedicated.map((res, index) => (
                 <p><strong>{res.name}</strong> No slots: {unassignedSlots(index)}</p>
               ))}
-              <h3>Burst</h3>
+              <strong>Burst</strong>
               {resources.burst.map((res, index) => (
                 <p><strong>{res.name}</strong> No slots: {unassignedSlots(index, true)}</p>
               ))}
