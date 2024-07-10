@@ -205,86 +205,92 @@ const ResourceAssignment = (props) => {
         <div className={style.pageGrid}>
           <div className={style.column}>
             <h1>Unassigned</h1>
-            <h3>Dedicated</h3>
-            {resources.dedicated.map((res, index) => (
-              <p><strong>{res.name}</strong> No slots: {unassignedSlots(index)}</p>
-            ))}
-            <h3>Burst</h3>
-            {resources.burst.map((res, index) => (
-              <p><strong>{res.name}</strong> No slots: {unassignedSlots(index, true)}</p>
-            ))}
+            <div className={style.scrollContainer}>
+              <h3>Dedicated</h3>
+              {resources.dedicated.map((res, index) => (
+                <p><strong>{res.name}</strong> No slots: {unassignedSlots(index)}</p>
+              ))}
+              <h3>Burst</h3>
+              {resources.burst.map((res, index) => (
+                <p><strong>{res.name}</strong> No slots: {unassignedSlots(index, true)}</p>
+              ))}
+            </div>
           </div>
           <div className={style.column}>
             <h1>Assigned</h1>
-            {
-              groups.map(g => {
-                return (
-                  <div className={style.groupCard}>
-                    <div className={style.flexSpaceBetween}>
-                      <h3>{g.name}</h3>
-                      <span>{groupTotalAssignedSlots(g.id)} slots</span>
+            <div className={style.scrollContainer}>
+              {
+                groups.map(g => {
+                  return (
+                    <div className={style.groupCard}>
+                      <div className={style.flexSpaceBetween}>
+                        <h3>{g.name}</h3>
+                        <span>{groupTotalAssignedSlots(g.id)} slots</span>
+                      </div>
+                      <div className={style.resourcesContainer}>
+                        {
+                          resources.dedicated.map((r, index) => {
+                            return (
+                              <AssignedResourceEditor
+                                resourceName={r.name}
+                                noSlots={assignedSlots.dedicated[index].find((a) => a.groupId === g.id).assignedSlots}
+                                unassigned={unassignedSlots(index)}
+                                onInputChange={(e) => handleInputChange(e, g.id, index)}
+                                onSlotIncrease={() => handleIncrease(g.id, index)}
+                                onSlotDecrease={() => handleDecrease(g.id, index)}
+                              />
+                            )
+                          })
+                        }
+                      </div>
+                      <div className={[style.resourcesContainer, style.burst].join(' ')}>
+                        <div className={style.burstHeader}>Burst</div>
+                        {
+                          resources.burst.map((r, index) => {
+                            return (
+                              <AssignedResourceEditor
+                                resourceName={r.name}
+                                noSlots={assignedSlots.burst[index].find((a) => a.groupId === g.id).assignedSlots}
+                                unassigned={unassignedSlots(index, true)}
+                                onInputChange={(e) => handleInputChange(e, g.id, index, true)}
+                                onSlotIncrease={() => handleIncrease(g.id, index, true)}
+                                onSlotDecrease={() => handleDecrease(g.id, index, true)}
+                              />
+                            )
+                          })
+                        }
+                      </div>
                     </div>
-                    <div className={style.resourcesContainer}>
-                      {
-                        resources.dedicated.map((r, index) => {
-                          return (
-                            <AssignedResourceEditor
-                              resourceName={r.name}
-                              noSlots={assignedSlots.dedicated[index].find((a) => a.groupId === g.id).assignedSlots}
-                              unassigned={unassignedSlots(index)}
-                              onInputChange={(e) => handleInputChange(e, g.id, index)}
-                              onSlotIncrease={() => handleIncrease(g.id, index)}
-                              onSlotDecrease={() => handleDecrease(g.id, index)}
-                            />
-                          )
-                        })
-                      }
-                    </div>
-                    <div className={[style.resourcesContainer, style.burst].join(' ')}>
-                      <div className={style.burstHeader}>Burst</div>
-                      {
-                        resources.burst.map((r, index) => {
-                          return (
-                            <AssignedResourceEditor
-                              resourceName={r.name}
-                              noSlots={assignedSlots.burst[index].find((a) => a.groupId === g.id).assignedSlots}
-                              unassigned={unassignedSlots(index, true)}
-                              onInputChange={(e) => handleInputChange(e, g.id, index, true)}
-                              onSlotIncrease={() => handleIncrease(g.id, index, true)}
-                              onSlotDecrease={() => handleDecrease(g.id, index, true)}
-                            />
-                          )
-                        })
-                      }
-                    </div>
-                  </div>
-                )
-              })
-            }
+                  )
+                })
+              }
+            </div>
           </div>
           <div className={style.column}>
             <h1>Changes</h1>
-            <div className={style.changes}>
-              {
-                groups.map((g, index) => {
-                  if (changesForGroup(index).length > 0) {
-                    return (
-                      <>
-                        <h3>{g.name}</h3>
-                        {changesForGroup(index).map((change) => {
-                          return (
-                            <p>
-                              {resources[assignmentType(change.isBurst)][change.resourceIndex].name} {change.isBurst ? 'burst' : ''}
-                              <br />
-                              {change.initiallyAssigned} --> {change.nowAssigned}
-                            </p>
-                          )
-                        })}
-                      </>
-                    )
-                  }
-                })
-              }
+            <div className={style.scrollContainer}>
+              <div className={style.changes}>
+                {
+                  groups.map((g, index) => {
+                    if (changesForGroup(index).length > 0) {
+                      return (
+                        <>
+                          <h3>{g.name}</h3>
+                          {changesForGroup(index).map((change) => {
+                            return (
+                              <p>
+                                {resources[assignmentType(change.isBurst)][change.resourceIndex].name} {change.isBurst ? 'burst' : ''}
+                                <br />
+                                {change.initiallyAssigned} --> {change.nowAssigned}
+                              </p>
+                            )
+                          })}
+                        </>
+                      )
+                    }
+                  })
+                }
+              </div>
             </div>
             <button
               className={style.requestButton}
