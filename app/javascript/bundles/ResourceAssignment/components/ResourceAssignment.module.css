@@ -127,9 +127,12 @@ input {
     justify-content: center;
     transition: scale 0.3s, background-color 0.3s;
 }
-.inputContainer button:hover:not(:active) {
+.inputContainer button:hover:not(:active, :disabled) {
     scale: 1.5;
     background-color: darkturquoise;
+}
+.inputContainer button:disabled {
+    filter: saturate(0.3) brightness(1.3);
 }
 .inputContainer button span {
     position: relative;
