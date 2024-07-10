@@ -13,3 +13,14 @@
  *= require_tree .
  *= require_self
  */
+
+ @font-face {
+  font-family: lexend;
+  src: url(Lexend-Light.woff2);
+ }
+
+ body {
+  font-family: lexend, sans-serif;
+  font-size: 0.95rem;
+  color: #3d3d3d;
+ }

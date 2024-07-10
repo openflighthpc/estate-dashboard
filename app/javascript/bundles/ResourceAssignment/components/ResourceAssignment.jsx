@@ -5,7 +5,7 @@ import * as style from './ResourceAssignment.module.css';
 function AssignedResourceEditor({ resourceName, noSlots, unassigned, onInputChange, onSlotIncrease, onSlotDecrease }) {
   return (
     <div className={[style.flexSpaceBetween, style.inputContainer].join(' ')}>
-      <strong>{resourceName}</strong>
+      {resourceName}
       <div className={style.flexSpaceBetween}>
         <input id="name" type="text" value={noSlots} onChange={onInputChange} />
         <div className={style.buttons}>
