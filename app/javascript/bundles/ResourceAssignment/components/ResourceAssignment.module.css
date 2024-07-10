@@ -6,11 +6,6 @@
     --button-height: 0.6rem;
 }
 
-.bright {
-    color: green;
-    font-weight: bold;
-}
-
 .pageGrid {
     display: grid;
     grid-template-columns: 3fr 3fr 2fr;
