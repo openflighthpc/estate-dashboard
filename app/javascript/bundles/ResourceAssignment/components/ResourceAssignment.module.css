@@ -1,3 +1,7 @@
+:root {
+    --corner-radius: 1rem;
+}
+
 .bright {
     color: green;
     font-weight: bold;
@@ -16,7 +20,9 @@
     flex-direction: column;
     align-items: center;
     height: 100%;
+    width: 100%;
     padding: 1rem;
+    box-sizing: border-box;
 }
 .column:first-child {
     padding-left: 2rem;
@@ -27,15 +33,48 @@
 
 .groupCard {
     border: solid 1px dodgerblue;
-    border-radius: 1rem;
+    border-radius: var(--corner-radius);
     margin-bottom: 1.5rem;
-    padding: 1rem 2rem;
+    padding: 1rem 2rem 2rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.groupCardHeader {
+.flexSpaceBetween {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.resourcesContainer {
+    display: grid;
+    grid-template-rows: auto;
+    gap: 0.5rem;
+    padding-inline: 1rem;
+}
+.burst.resourcesContainer {
+    position: relative;
+    margin-top: 1.5rem;
+    border: dashed 1px dodgerblue;
+    border-radius: var(--corner-radius);
+    padding-block: 1rem;
+}
+.burstHeader {
+    position: absolute;
+    top: -0.7rem;
+    left: 1rem;
+    padding: 0.1rem;
+    background-color: white;
+    width: min-content;
+}
+
+.inputContainer {
+    white-space: nowrap;
+}
+input {
+    width: 2.5rem;
+    text-align: center;
+    margin-left: 1rem;
 }
 
 .changes {

@@ -1,20 +1,23 @@
 import PropTypes from 'prop-types';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as style from './ResourceAssignment.module.css';
 
-function AssignedResourceEditor({ assignmentType, noSlots, unassigned, onInputChange, onSlotIncrease, onSlotDecrease }) {
+function AssignedResourceEditor({ resourceName, noSlots, unassigned, onInputChange, onSlotIncrease, onSlotDecrease }) {
   return (
-    <>
-      <input id="name" type="text" value={noSlots} onChange={onInputChange} />
-      <button
-        disabled = {unassigned <= 0}
-        onClick={onSlotIncrease}
-      >+</button>
-      <button
-        disabled = {noSlots <= 0}
-        onClick={onSlotDecrease}
-      >-</button>
-    </>
+    <div className={[style.flexSpaceBetween, style.inputContainer].join(' ')}>
+      <strong>{resourceName}</strong>
+      <div>
+        <input id="name" type="text" value={noSlots} onChange={onInputChange} />
+        <button
+          disabled={unassigned <= 0}
+          onClick={onSlotIncrease}
+        >+</button>
+        <button
+          disabled={noSlots <= 0}
+          onClick={onSlotDecrease}
+        >-</button>
+      </div>
+    </div>
   );
 }
 
@@ -98,20 +101,20 @@ const ResourceAssignment = (props) => {
     if (e.target.value >= 0) {
       const currentAssignments = assignedSlots[assignmentType(isBurst)][resourceIndex].find((g) => g.groupId === groupId).assignedSlots;
       const maxSlots = unassignedSlots(resourceIndex, isBurst) + currentAssignments;
-      if ( e.target.value <= maxSlots) {
-        let newAssigned = {...assignedSlots};
+      if (e.target.value <= maxSlots) {
+        let newAssigned = { ...assignedSlots };
         newAssigned[assignmentType(isBurst)][resourceIndex].find((g) => g.groupId === groupId).assignedSlots = Number(e.target.value);
         setAssignedSlots(newAssigned);
       }
     }
   }
   function handleIncrease(groupId, resourceIndex, isBurst) {
-    let newAssigned = {...assignedSlots};
+    let newAssigned = { ...assignedSlots };
     newAssigned[assignmentType(isBurst)][resourceIndex].find((g) => g.groupId === groupId).assignedSlots += 1;
     setAssignedSlots(newAssigned);
   }
   function handleDecrease(groupId, resourceIndex, isBurst) {
-    let newAssigned = {...assignedSlots};
+    let newAssigned = { ...assignedSlots };
     newAssigned[assignmentType(isBurst)][resourceIndex].find((g) => g.groupId === groupId).assignedSlots -= 1;
     setAssignedSlots(newAssigned);
   }
@@ -207,53 +210,51 @@ const ResourceAssignment = (props) => {
           </div>
           <div className={style.column}>
             <h1>Assigned</h1>
-            <div>
-              {
-                groups.map(g => {
-                  return (
-                    <div className={style.groupCard}>
-                      <div className={style.groupCardHeader}>
-                        <h3>{g.name}</h3>
-                        <span>{groupTotalAssignedSlots(g.id)} slots</span>
-                      </div>
+            {
+              groups.map(g => {
+                return (
+                  <div className={style.groupCard}>
+                    <div className={style.flexSpaceBetween}>
+                      <h3>{g.name}</h3>
+                      <span>{groupTotalAssignedSlots(g.id)} slots</span>
+                    </div>
+                    <div className={style.resourcesContainer}>
                       {
                         resources.dedicated.map((r, index) => {
                           return (
-                            <p>
-                              <strong>{r.name}</strong>
-                              <AssignedResourceEditor
-                                noSlots={assignedSlots.dedicated[index].find((a) => a.groupId === g.id).assignedSlots}
-                                unassigned={unassignedSlots(index)}
-                                onInputChange={(e) => handleInputChange(e, g.id, index)}
-                                onSlotIncrease={() => handleIncrease(g.id, index)}
-                                onSlotDecrease={() => handleDecrease(g.id, index)}
-                              />
-                            </p>
-                          )
-                        })
-                      }
-                      Burst: <br/>
-                      {
-                        resources.burst.map((r, index) => {
-                          return (
-                            <p>
-                              <strong>{r.name}</strong>
-                              <AssignedResourceEditor
-                                noSlots={assignedSlots.burst[index].find((a) => a.groupId === g.id).assignedSlots}
-                                unassigned={unassignedSlots(index, true)}
-                                onInputChange={(e) => handleInputChange(e, g.id, index, true)}
-                                onSlotIncrease={() => handleIncrease(g.id, index, true)}
-                                onSlotDecrease={() => handleDecrease(g.id, index, true)}
-                              />
-                            </p>
+                            <AssignedResourceEditor
+                              resourceName={r.name}
+                              noSlots={assignedSlots.dedicated[index].find((a) => a.groupId === g.id).assignedSlots}
+                              unassigned={unassignedSlots(index)}
+                              onInputChange={(e) => handleInputChange(e, g.id, index)}
+                              onSlotIncrease={() => handleIncrease(g.id, index)}
+                              onSlotDecrease={() => handleDecrease(g.id, index)}
+                            />
                           )
                         })
                       }
                     </div>
-                  )
-                })
-              }
-            </div>
+                    <div className={[style.resourcesContainer, style.burst].join(' ')}>
+                      <div className={style.burstHeader}>Burst</div>
+                      {
+                        resources.burst.map((r, index) => {
+                          return (
+                            <AssignedResourceEditor
+                              resourceName={r.name}
+                              noSlots={assignedSlots.burst[index].find((a) => a.groupId === g.id).assignedSlots}
+                              unassigned={unassignedSlots(index, true)}
+                              onInputChange={(e) => handleInputChange(e, g.id, index, true)}
+                              onSlotIncrease={() => handleIncrease(g.id, index, true)}
+                              onSlotDecrease={() => handleDecrease(g.id, index, true)}
+                            />
+                          )
+                        })
+                      }
+                    </div>
+                  </div>
+                )
+              })
+            }
           </div>
           <div className={style.column}>
             <h1>Changes</h1>
@@ -268,7 +269,7 @@ const ResourceAssignment = (props) => {
                           return (
                             <p>
                               {resources[assignmentType(change.isBurst)][change.resourceIndex].name} {change.isBurst ? 'burst' : ''}
-                              <br/>
+                              <br />
                               {change.initiallyAssigned} --> {change.nowAssigned}
                             </p>
                           )
