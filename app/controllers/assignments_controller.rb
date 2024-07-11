@@ -22,21 +22,25 @@ class AssignmentsController < ApplicationController
   def send_message
     data = JSON.parse(request.raw_post)
     org = Organisation.find(data['organisationId'])
-    assignment_change_request = AssignmentChangeRequest.create(organisation_id: org.id)
+    assignments = []
     data['changes'].each do |res_group|
       group_id = res_group["groupId"]
       res_group["changes"].each do |change|
-        assignment = PendingResourceAssignment.new(
+        assignments << PendingResourceAssignment.new(
           no_slots: change["nowAssigned"],
           resource_id: change["resourceId"],
           resource_group_id: group_id,
-          assignment_change_request_id: assignment_change_request.id
         )
-        assignment_change_request.pending_resource_assignments << assignment
       end
     end
-    r = org.send_message(assignment_change_request.slack_message)
-    response = { result: r.success? ? "Request sent successfully" : "Request failed" }
+    if assignments.map{ |a| [a.resource_id, a.resource_group_id, a.no_slots] }.sort == AssignmentChangeRequest.last.pending_resource_assignments.pluck(:resource_id, :resource_group_id, :no_slots).sort
+      response = { result: "Request already received" }
+    else
+      assignment_change_request = AssignmentChangeRequest.create(organisation_id: org.id)
+      assignments.each { |ass| assignment_change_request.pending_resource_assignments << ass }
+      r = org.send_message(assignment_change_request.slack_message)
+      response = { result: r.success? ? "Request sent successfully" : "Request failed" }
+    end
     render json: response
   end
 

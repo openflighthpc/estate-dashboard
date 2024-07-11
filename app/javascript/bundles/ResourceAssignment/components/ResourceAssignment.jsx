@@ -36,6 +36,7 @@ const ResourceAssignment = (props) => {
   const [error, setError] = useState(null);
   const [assignedSlots, setAssignedSlots] = useState([]);
   const [initialAssignments, setInitialAssignment] = useState([]);
+  const [requestResponse, setRequestResponse] = useState("");
   const organisationId = new URLSearchParams(window.location.search).get('organisation_id');
 
   useEffect(() => {
@@ -198,7 +199,7 @@ const ResourceAssignment = (props) => {
         throw new Error(`Response status: ${response.status}`);
       }
       const json = await response.json();
-      console.log(json);
+      setRequestResponse(json.result);
     } catch (error) {
       console.error(error.message);
     }
@@ -306,6 +307,7 @@ const ResourceAssignment = (props) => {
                 }
               </div>
             </div>
+            <p>{requestResponse}</p>
             <button
               className={style.requestButton}
               disabled={!anyChanges()}
