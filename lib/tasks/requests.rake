@@ -17,6 +17,11 @@ namespace :requests do
         puts " "
       end
     end
-  end
 
+    task :apply, [:request_id] => :environment do |t, args|
+      request = AssignmentChangeRequest.find(args[:request_id])
+      request.apply
+      request.update(status: 'COMPLETE')
+    end
+  end
 end

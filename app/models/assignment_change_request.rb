@@ -2,7 +2,7 @@ class AssignmentChangeRequest < ApplicationRecord
   has_many :pending_resource_assignments
 
   validates :status, inclusion: {
-    in: %w(PENDING COMPLETED CANCELLED),
+    in: %w(PENDING COMPLETE CANCELLED),
     message: 'must be either PENDING COMPLETED or CANCELLED'
   }
 
@@ -23,5 +23,25 @@ class AssignmentChangeRequest < ApplicationRecord
       msg << "\n"
     end
     msg.join("\n")
+  end
+
+  def apply
+    pending_resource_assignments.each do |pending_ass|
+      existing = ResourceAssignment.find_by(
+        resource_id: pending_ass.resource_id,
+        resource_group_id: pending_ass.resource_group_id,
+      )
+      if existing
+        existing.update(
+          no_slots: pending_ass.no_slots
+        )
+      else
+        ResourceAssignment.create(
+          resource_id: pending_ass.resource_id,
+          resource_group_id: pending_ass.resource_group_id,
+          no_slots: pending_ass.no_slots,
+        )
+      end
+    end
   end
 end
