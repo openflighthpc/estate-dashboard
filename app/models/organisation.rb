@@ -35,4 +35,17 @@ class Organisation < ApplicationRecord
       dedicated: resources.where(burst: false).map { |res| res.assignment_details },
     }
   end
+
+  def pending_resource_assignments
+    pending_assignments = []
+    PendingResourceAssignment.joins(:assignment_change_request)
+                             .where(assignment_change_request: {status: 'PENDING', organisation_id: id})
+                             .order(created_at: :desc)
+                             .each do |pending_ass|
+                               pending_assignments.push(pending_ass) unless pending_assignments.pluck(:resource_id, :resource_group_id).find { |a|
+                                 a == [pending_ass.resource_id, pending_ass.resource_group_id]
+                               }
+                             end
+    pending_assignments
+  end
 end

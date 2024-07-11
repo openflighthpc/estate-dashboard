@@ -22,7 +22,7 @@ class AssignmentsController < ApplicationController
   def send_message
     data = JSON.parse(request.raw_post)
     org = Organisation.find(data['organisationId'])
-    assignment_change_request = AssignmentChangeRequest.create
+    assignment_change_request = AssignmentChangeRequest.create(organisation_id: org.id)
     data['changes'].each do |res_group|
       group_id = res_group["groupId"]
       res_group["changes"].each do |change|

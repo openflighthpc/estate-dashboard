@@ -13,8 +13,10 @@
 ActiveRecord::Schema[7.1].define(version: 2024_07_05_102242) do
   create_table "assignment_change_requests", force: :cascade do |t|
     t.string "status", default: "PENDING"
+    t.integer "organisation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["organisation_id"], name: "index_assignment_change_requests_on_organisation_id"
   end
 
   create_table "change_requests", force: :cascade do |t|
@@ -63,6 +65,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_05_102242) do
 
   create_table "resource_assignments", force: :cascade do |t|
     t.integer "no_slots"
+    t.boolean "burst", default: false
     t.integer "resource_id"
     t.integer "resource_group_id"
     t.datetime "created_at", null: false
@@ -93,6 +96,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_05_102242) do
     t.index ["organisation_id"], name: "index_resources_on_organisation_id"
   end
 
+  add_foreign_key "assignment_change_requests", "organisations"
   add_foreign_key "pending_resource_assignments", "assignment_change_requests"
   add_foreign_key "pending_resource_assignments", "resource_groups"
   add_foreign_key "pending_resource_assignments", "resources"
