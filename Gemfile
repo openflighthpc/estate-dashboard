@@ -66,3 +66,6 @@ gem "shakapacker", "= 7.0.1"
 
 gem "react_on_rails", "= 13.3.1"
 gem "foreman"
+
+gem "standard"
+

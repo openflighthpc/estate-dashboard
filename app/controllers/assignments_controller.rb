@@ -4,9 +4,9 @@ class AssignmentsController < ApplicationController
   def show
     get_resource_data
   end
+
   def edit
     get_resource_data
-    @props = { name: "Stranger" }
   end
 
   def raw_data
@@ -14,32 +14,32 @@ class AssignmentsController < ApplicationController
     response = {
       organisationId: @organisation.id,
       resourceGroups: @organisation.resource_groups.select(:id, :name),
-      assignments: @organisation.assigned_resources,
+      assignments: @organisation.assigned_resources
     }
     render json: response
   end
 
   def send_message
     data = JSON.parse(request.raw_post)
-    org = Organisation.find(data['organisationId'])
+    org = Organisation.find(data["organisationId"])
     assignments = []
-    data['changes'].each do |res_group|
+    data["changes"].each do |res_group|
       group_id = res_group["groupId"]
       res_group["changes"].each do |change|
         assignments << PendingResourceAssignment.new(
           no_slots: change["nowAssigned"],
           resource_id: change["resourceId"],
-          resource_group_id: group_id,
+          resource_group_id: group_id
         )
       end
     end
-    if assignments.map{ |a| [a.resource_id, a.resource_group_id, a.no_slots] }.sort == AssignmentChangeRequest.last.pending_resource_assignments.pluck(:resource_id, :resource_group_id, :no_slots).sort
-      response = { result: "Request already received" }
+    if assignments.map { |a| [a.resource_id, a.resource_group_id, a.no_slots] }.sort == AssignmentChangeRequest.last.pending_resource_assignments.pluck(:resource_id, :resource_group_id, :no_slots).sort
+      response = {result: "Request already received"}
     else
       assignment_change_request = AssignmentChangeRequest.create(organisation_id: org.id)
       assignments.each { |ass| assignment_change_request.pending_resource_assignments << ass }
       r = org.send_message(assignment_change_request.slack_message)
-      response = { result: r.success? ? "Request sent successfully" : "Request failed" }
+      response = {result: r.success? ? "Request sent successfully" : "Request failed"}
     end
     render json: response
   end
