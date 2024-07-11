@@ -8,6 +8,7 @@ namespace :requests do
   end
 
   namespace :assignments do
+    desc "List requested resource assignments from pending change requests"
     task :list_pending => :environment do
       AssignmentChangeRequest.where(status: 'PENDING').each do |pending_request|
         puts ["-" * 60]
@@ -18,10 +19,17 @@ namespace :requests do
       end
     end
 
+    desc "Apply the changes requested in an assignment change request"
     task :apply, [:request_id] => :environment do |t, args|
       request = AssignmentChangeRequest.find(args[:request_id])
       request.apply
       request.update(status: 'COMPLETE')
+    end
+
+    desc "Cancel an assignment change request"
+    task :cancel, [:request_id] => :environment do |t, args|
+      request = AssignmentChangeRequest.find(args[:request_id])
+      request.update(status: 'CANCELLED')
     end
   end
 end
