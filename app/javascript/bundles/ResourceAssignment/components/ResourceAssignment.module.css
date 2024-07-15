@@ -45,6 +45,20 @@
     width: 100%;
 }
 
+button {
+    background-color: dodgerblue;
+    border: none;
+    color: white;
+    transition: scale 0.3s, background-color 0.3s;
+}
+button:disabled {
+    filter: saturate(0.3) brightness(1.3);
+}
+button:hover:not(:active, :disabled) {
+    cursor: pointer;
+    background-color: darkturquoise;
+}
+
 .groupCard {
     border: solid 1px dodgerblue;
     border-radius: var(--corner-radius);
@@ -114,25 +128,18 @@ input {
     border-left: none;
 }
 .inputContainer button {
-    background-color: dodgerblue;
-    color: white;
     font-size: var(--button-height);
     line-height: var(--button-height);
     width: 0.8rem;
     height: var(--button-height);
     margin-right: 1px;
-    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: scale 0.3s, background-color 0.3s;
+    
 }
 .inputContainer button:hover:not(:active, :disabled) {
     scale: 1.5;
-    background-color: darkturquoise;
-}
-.inputContainer button:disabled {
-    filter: saturate(0.3) brightness(1.3);
 }
 .inputContainer button span {
     position: relative;
@@ -156,5 +163,10 @@ input {
 
 .requestButton {
     margin-top: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--corner-radius);
+}
+.requestButton:hover:not(:active, :disabled) {
+    scale: 1.2;
 }
