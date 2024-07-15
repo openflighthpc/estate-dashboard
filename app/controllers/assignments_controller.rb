@@ -14,7 +14,8 @@ class AssignmentsController < ApplicationController
     response = {
       organisationId: @organisation.id,
       resourceGroups: @organisation.resource_groups.select(:id, :name),
-      assignments: @organisation.assigned_resources
+      assignments: @organisation.assigned_resources,
+      pendingAssignments: @organisation.pending_resource_assignments
     }
     render json: response
   end

@@ -35,7 +35,8 @@ const ResourceAssignment = (props) => {
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [error, setError] = useState(null);
   const [assignedSlots, setAssignedSlots] = useState([]);
-  const [initialAssignments, setInitialAssignment] = useState([]);
+  const [pendingAssignedSlots, setPendingAssignedSlots] = useState([]);
+  const [actualAssignments, setActualAssignment] = useState([]);
   const [requestResponse, setRequestResponse] = useState("");
   const organisationId = new URLSearchParams(window.location.search).get('organisation_id');
 
@@ -55,11 +56,7 @@ const ResourceAssignment = (props) => {
       const data = await response.json();
       setGroups(data.resourceGroups);
       setResources(data.assignments);
-      setAssignedSlots({
-        dedicated: data.assignments.dedicated.map((res) => res.assignments),
-        burst: data.assignments.burst.map((res) => res.assignments),
-      });
-      // setAssignedBurstSlots(data.assignments.burst.map((res) => res.assignments));
+      setAssignedSlots(data.pendingAssignments);
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -75,10 +72,11 @@ const ResourceAssignment = (props) => {
         throw new Error('Network response was not ok.');
       }
       const data = await response.json();
-      setInitialAssignment({
+      setActualAssignment({
         dedicated: data.assignments.dedicated.map((res) => res.assignments),
         burst: data.assignments.burst.map((res) => res.assignments),
       });
+      setPendingAssignedSlots(data.pendingAssignments);
       setLoadingInitial(false);
     } catch (error) {
       setError(error.message);
@@ -144,7 +142,7 @@ const ResourceAssignment = (props) => {
     const groupId = groups[groupIndex].id;
     let changedAssignments = [];
     for (let i = 0; i < resources.dedicated.length; i++) {
-      const initiallyAssigned = initialAssignments.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
+      const initiallyAssigned = actualAssignments.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
       const nowAssigned = assignedSlots.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
       if (initiallyAssigned !== nowAssigned) {
         changedAssignments.push(
@@ -159,7 +157,7 @@ const ResourceAssignment = (props) => {
       }
     }
     for (let i = 0; i < resources.burst.length; i++) {
-      const initiallyAssigned = initialAssignments.burst[i].find((g) => g.groupId === groupId).assignedSlots;
+      const initiallyAssigned = actualAssignments.burst[i].find((g) => g.groupId === groupId).assignedSlots;
       const nowAssigned = assignedSlots.burst[i].find((g) => g.groupId === groupId).assignedSlots;
       if (initiallyAssigned !== nowAssigned) {
         changedAssignments.push(
@@ -214,6 +212,8 @@ const ResourceAssignment = (props) => {
               <h3>Unassigned</h3>
               <span>{totalUnassignedSlots()} slots</span>
             </div>
+            {console.log(pendingAssignedSlots)}
+            {console.log(assignedSlots)}
             <div className={style.scrollContainer}>
               <div className={[style.resourcesContainer, style.unassigned].join(' ')}>
                 {resources.dedicated.map((res, index) => (
