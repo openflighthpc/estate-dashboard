@@ -131,7 +131,7 @@ const ResourceAssignment = (props) => {
 
   function anyChanges() {
     for (let i = 0; i < groups.length; i++) {
-      if (changesForGroup(i).length > 0) {
+      if (changesForGroup(i).length > 0 && changesForGroup(i).filter((change) => !change.isPending).length > 0) {
         return true;
       }
     }
@@ -145,7 +145,7 @@ const ResourceAssignment = (props) => {
       const initiallyAssigned = actualAssignments.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
       const pendingAssigned = pendingAssignedSlots.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
       const nowAssigned = assignedSlots.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
-      if (initiallyAssigned !== nowAssigned) {
+      if (initiallyAssigned !== nowAssigned || initiallyAssigned !== pendingAssigned) {
         changedAssignments.push(
           {
             resourceIndex: i,
@@ -162,7 +162,7 @@ const ResourceAssignment = (props) => {
       const initiallyAssigned = actualAssignments.burst[i].find((g) => g.groupId === groupId).assignedSlots;
       const pendingAssigned = pendingAssignedSlots.burst[i].find((g) => g.groupId === groupId).assignedSlots;
       const nowAssigned = assignedSlots.burst[i].find((g) => g.groupId === groupId).assignedSlots;
-      if (initiallyAssigned !== nowAssigned) {
+      if (initiallyAssigned !== nowAssigned || initiallyAssigned !== pendingAssigned) {
         changedAssignments.push(
           {
             resourceIndex: i,
