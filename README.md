@@ -41,6 +41,6 @@ Admins with access to the hosting server may make use of the following Rake task
 
 #### Resource group assignments
 * `rails resource_groups:create` - Create a resource group
-* `rails requests:assignments:list_pending` - List pending requests for resource group assignments
+* `rails requests:assignments:list[status]` - List requests for resource group assignments with a given status (no argument displays all assignments)
 * `rails resource_groups:assignments:apply[request_id]` - Apply the changes from an assignment change request
 * `rails resource_groups:assignments:cancel[request_id]` - Cancel an assignment change request
