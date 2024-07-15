@@ -33,7 +33,8 @@ class AssignmentsController < ApplicationController
         )
       end
     end
-    if assignments.map { |a| [a.resource_id, a.resource_group_id, a.no_slots] }.sort == AssignmentChangeRequest.last.pending_resource_assignments.pluck(:resource_id, :resource_group_id, :no_slots).sort
+    last_assignment_request = AssignmentChangeRequest.last
+    if last_assignment_request && assignments.map { |a| [a.resource_id, a.resource_group_id, a.no_slots] }.sort == last_assignment_request.pending_resource_assignments.pluck(:resource_id, :resource_group_id, :no_slots).sort
       response = {result: "Request already received"}
     else
       assignment_change_request = AssignmentChangeRequest.create(organisation_id: org.id)
