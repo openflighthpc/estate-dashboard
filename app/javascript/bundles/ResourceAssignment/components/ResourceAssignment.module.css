@@ -157,14 +157,16 @@ input {
     border-radius: 0 0 var(--corner-radius) 0;
 }
 
+
 .changes {
     width: 100%;
 }
-
+.groupChanges {
+    margin-bottom: 1rem;
+}
 .pendingChangeKey {
     margin-bottom: 1rem;
 }
-
 .pendingChange {
     color: dodgerblue;
 }

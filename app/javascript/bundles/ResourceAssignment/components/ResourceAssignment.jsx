@@ -289,7 +289,7 @@ const ResourceAssignment = (props) => {
           <div className={style.column}>
             <h3>Changes</h3>
             <div className={style.pendingChangeKey}>
-              <strong className={style.pendingChange}>---</strong> Pending assignments
+              <strong className={style.pendingChange}>---</strong> Pending assignment
             </div>
             <div className={style.scrollContainer}>
               <div className={style.changes}>
@@ -297,18 +297,17 @@ const ResourceAssignment = (props) => {
                   groups.map((g, index) => {
                     if (changesForGroup(index).length > 0) {
                       return (
-                        <>
+                        <div className={style.groupChanges}>
                           <strong>{g.name}</strong>
                           {changesForGroup(index).map((change) => {
                             return (
-                              <p className={change.isPending ? style.pendingChange : ''}>
-                                {resources[assignmentType(change.isBurst)][change.resourceIndex].name} {change.isBurst ? 'burst' : ''}
-                                <br />
-                                {change.initiallyAssigned} --> {change.nowAssigned}
-                              </p>
+                              <div className={[style.flexSpaceBetween, change.isPending ? style.pendingChange : ''].join(' ')}>
+                                <span>{resources[assignmentType(change.isBurst)][change.resourceIndex].name} {change.isBurst ? 'burst' : ''}</span>
+                                <span>{change.initiallyAssigned} {'\u21D2'} {change.nowAssigned}</span>
+                              </div>
                             )
                           })}
-                        </>
+                        </div>
                       )
                     }
                   })
