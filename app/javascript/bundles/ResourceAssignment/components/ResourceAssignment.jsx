@@ -143,6 +143,7 @@ const ResourceAssignment = (props) => {
     let changedAssignments = [];
     for (let i = 0; i < resources.dedicated.length; i++) {
       const initiallyAssigned = actualAssignments.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
+      const pendingAssigned = pendingAssignedSlots.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
       const nowAssigned = assignedSlots.dedicated[i].find((g) => g.groupId === groupId).assignedSlots;
       if (initiallyAssigned !== nowAssigned) {
         changedAssignments.push(
@@ -152,12 +153,14 @@ const ResourceAssignment = (props) => {
             initiallyAssigned: initiallyAssigned,
             nowAssigned: nowAssigned,
             isBurst: false,
+            isPending: initiallyAssigned !== pendingAssigned && nowAssigned === pendingAssigned,
           }
         )
       }
     }
     for (let i = 0; i < resources.burst.length; i++) {
       const initiallyAssigned = actualAssignments.burst[i].find((g) => g.groupId === groupId).assignedSlots;
+      const pendingAssigned = pendingAssignedSlots.burst[i].find((g) => g.groupId === groupId).assignedSlots;
       const nowAssigned = assignedSlots.burst[i].find((g) => g.groupId === groupId).assignedSlots;
       if (initiallyAssigned !== nowAssigned) {
         changedAssignments.push(
@@ -167,6 +170,7 @@ const ResourceAssignment = (props) => {
             initiallyAssigned: initiallyAssigned,
             nowAssigned: nowAssigned,
             isBurst: true,
+            isPending: initiallyAssigned !== pendingAssigned && nowAssigned === pendingAssigned,
           }
         )
       }
@@ -293,7 +297,7 @@ const ResourceAssignment = (props) => {
                           <strong>{g.name}</strong>
                           {changesForGroup(index).map((change) => {
                             return (
-                              <p>
+                              <p className={change.isPending ? style.pendingChange : ''}>
                                 {resources[assignmentType(change.isBurst)][change.resourceIndex].name} {change.isBurst ? 'burst' : ''}
                                 <br />
                                 {change.initiallyAssigned} --> {change.nowAssigned}

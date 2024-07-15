@@ -161,6 +161,10 @@ input {
     width: 100%;
 }
 
+.pendingChange {
+    color: dodgerblue;
+}
+
 .requestButton {
     margin-top: auto;
     margin-bottom: 2rem;
