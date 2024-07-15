@@ -202,6 +202,7 @@ const ResourceAssignment = (props) => {
       }
       const json = await response.json();
       setRequestResponse(json.result);
+      window.location.reload();
     } catch (error) {
       console.error(error.message);
     }
@@ -288,7 +289,7 @@ const ResourceAssignment = (props) => {
           <div className={style.column}>
             <h3>Changes</h3>
             <div className={style.pendingChangeKey}>
-              <strong className={style.pendingChange}>---</strong> Pending changes
+              <strong className={style.pendingChange}>---</strong> Pending assignments
             </div>
             <div className={style.scrollContainer}>
               <div className={style.changes}>

@@ -34,15 +34,10 @@ class AssignmentsController < ApplicationController
         )
       end
     end
-    last_assignment_request = AssignmentChangeRequest.last
-    if last_assignment_request && assignments.map { |a| [a.resource_id, a.resource_group_id, a.no_slots] }.sort == last_assignment_request.pending_resource_assignments.pluck(:resource_id, :resource_group_id, :no_slots).sort
-      response = {result: "Request already received"}
-    else
-      assignment_change_request = AssignmentChangeRequest.create(organisation_id: org.id)
-      assignments.each { |ass| assignment_change_request.pending_resource_assignments << ass }
-      r = org.send_message(assignment_change_request.slack_message)
-      response = {result: r.success? ? "Request sent successfully" : "Request failed"}
-    end
+    assignment_change_request = AssignmentChangeRequest.create(organisation_id: org.id)
+    assignments.each { |ass| assignment_change_request.pending_resource_assignments << ass }
+    r = org.send_message(assignment_change_request.slack_message)
+    response = {result: r.success? ? "Request sent successfully" : "Request failed"}
     render json: response
   end
 
