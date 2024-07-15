@@ -35,12 +35,12 @@ Admins with access to the hosting server may make use of the following Rake task
 
 #### Requests
 * `rails requests:list` - List past change requests from users
-* `rails requests:assignments:list_pending` - List pending requests for resource group assignments
 
 #### Changes
 * `rails changes:list` - List past changes made to resources. These logs reflect changes made using the above Rake commands - any changes made internally by the app or through use of `rails console` will not be stored here.
 
 #### Resource group assignments
-* `rake resource_groups:apply[request_id]` - Apply the changes from an assignment change request
-* `rake resource_groups:cancel[request_id]` - Cancel an assignment change request
-* `rake resource_groups:resource_groups:create` - Create a resource group
+* `rails resource_groups:create` - Create a resource group
+* `rails requests:assignments:list_pending` - List pending requests for resource group assignments
+* `rails resource_groups:assignments:apply[request_id]` - Apply the changes from an assignment change request
+* `rails resource_groups:assignments:cancel[request_id]` - Cancel an assignment change request
