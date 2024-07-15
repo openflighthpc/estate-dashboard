@@ -161,6 +161,10 @@ input {
     width: 100%;
 }
 
+.pendingChangeKey {
+    margin-bottom: 1rem;
+}
+
 .pendingChange {
     color: dodgerblue;
 }

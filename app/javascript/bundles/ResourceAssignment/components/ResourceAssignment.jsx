@@ -287,6 +287,9 @@ const ResourceAssignment = (props) => {
           </div>
           <div className={style.column}>
             <h3>Changes</h3>
+            <div className={style.pendingChangeKey}>
+              <strong className={style.pendingChange}>---</strong> Pending changes
+            </div>
             <div className={style.scrollContainer}>
               <div className={style.changes}>
                 {
