@@ -157,7 +157,6 @@ input {
     border-radius: 0 0 var(--corner-radius) 0;
 }
 
-
 .changes {
     width: 100%;
 }
@@ -169,6 +168,9 @@ input {
 }
 .pendingChange {
     color: dodgerblue;
+}
+.slotsChanged {
+    white-space: nowrap;
 }
 
 .requestButton {

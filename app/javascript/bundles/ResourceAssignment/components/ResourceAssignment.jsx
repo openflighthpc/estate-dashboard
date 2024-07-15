@@ -303,7 +303,7 @@ const ResourceAssignment = (props) => {
                             return (
                               <div className={[style.flexSpaceBetween, change.isPending ? style.pendingChange : ''].join(' ')}>
                                 <span>{resources[assignmentType(change.isBurst)][change.resourceIndex].name} {change.isBurst ? 'burst' : ''}</span>
-                                <span>{change.initiallyAssigned} {'\u21D2'} {change.nowAssigned}</span>
+                                <span className={style.slotsChanged}>{change.initiallyAssigned} {'\u21D2'} {change.nowAssigned}</span>
                               </div>
                             )
                           })}
