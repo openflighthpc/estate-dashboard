@@ -407,8 +407,8 @@ window.onload = async function () {
           <p class="platform-legend-summary"><b>Resources: </b>${value.length}</p>
           <p class="platform-legend-summary">
             <b>Costs per Slot</b><br>
-            <b>Dedicated: </b>£${Math.round(value.cost.dedicated / value.capacity.dedicated * 100) / 100}/month<br>
-            <b>Burst: </b>£${value.capacity.maxBurst === 0 ? 0 : Math.round(value.cost.maxBurst / value.capacity.maxBurst * 100) / 100}/month
+            <b>Dedicated: </b>£${value.cost.utilizedTotal}/month<br>
+            <b>Burst: </b>£${value.capacity.maxBurst === 0 ? 0 : value.cost.utilizedBurst}/month
           </p>
         </div>
         <div class="platform-legend-data-wrapper">
@@ -419,17 +419,17 @@ window.onload = async function () {
           <p class="platform-legend-data platform-legend-capacity-data">${value.capacity.dedicated}</p>
           <p class="platform-legend-data platform-legend-cost-data">${value.cost.dedicated}</p>
           <p class="platform-legend-data"><b>Burst (utilized)</b></p>
-          <p class="platform-legend-data platform-legend-capacity-data">${value.cost.utilizedBurst}</p>
+          <p class="platform-legend-data platform-legend-capacity-data">${value.capacity.utilizedBurst}</p>
           <p class="platform-legend-data platform-legend-cost-data">${value.cost.utilizedBurst}</p>
           <p class="platform-legend-data"><b>Burst (max)</b></p>
-          <p class="platform-legend-data platform-legend-capacity-data">${value.cost.maxBurst}</p>
+          <p class="platform-legend-data platform-legend-capacity-data">${value.capacity.maxBurst}</p>
           <p class="platform-legend-data platform-legend-cost-data">${value.cost.maxBurst}</p>
           <div class="platform-legend-data-dividing"></div>
           <p class="platform-legend-data"><b>Total (utilized)</b></p>
-          <p class="platform-legend-data platform-legend-capacity-data">${value.cost.utilizedTotal}</p>
+          <p class="platform-legend-data platform-legend-capacity-data">${value.capacity.utilizedTotal}</p>
           <p class="platform-legend-data platform-legend-cost-data">${value.cost.utilizedTotal}</p>
           <p class="platform-legend-data"><b>Total (max)</b></p>
-          <p class="platform-legend-data platform-legend-capacity-data">${value.cost.maxTotal}</p>
+          <p class="platform-legend-data platform-legend-capacity-data">${value.capacity.maxTotal}</p>
           <p class="platform-legend-data platform-legend-cost-data">${value.cost.maxTotal}</p>
         </div>
       </div>`
