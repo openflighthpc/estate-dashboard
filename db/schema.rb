@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_05_102242) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_18_134136) do
   create_table "assignment_change_requests", force: :cascade do |t|
     t.string "status", default: "PENDING"
     t.integer "organisation_id"
@@ -40,6 +40,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_05_102242) do
     t.boolean "burst"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "cost"
     t.index ["resource_id"], name: "index_changes_on_resource_id"
   end
 
